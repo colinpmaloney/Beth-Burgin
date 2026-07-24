@@ -63,6 +63,9 @@
   --shadow-e3-dark:
     inset 0 1px 0 rgb(255 255 255 / 0.16), 0 2px 4px rgb(34 31 28 / 0.22),
     0 14px 28px -8px rgb(34 31 28 / 0.3), 0 32px 56px -24px rgb(34 31 28 / 0.32);
+  --shadow-e4-dark:
+    inset 0 1px 0 rgb(255 255 255 / 0.2), 0 2px 6px rgb(34 31 28 / 0.24),
+    0 20px 38px -10px rgb(34 31 28 / 0.34), 0 44px 76px -30px rgb(34 31 28 / 0.36);
 
   /* Pressed: the surface drops to the page, so the highlight moves inside and
      the two outer layers collapse to nothing. Kept at four layers so it can be
@@ -166,11 +169,12 @@
 
 /* Reveal-on-scroll: opt-in, and inert when JS is off or motion is reduced */
 @layer components {
-  /* The offset uses the independent `translate` property rather than
-     `transform`. An element can be both a reveal target and a card that lifts
-     on hover, and `.js .reveal.is-visible { transform: none }` outranks a
-     hover utility, so sharing `transform` meant the reveal silently cancelled
-     the lift. Different properties, no collision. */
+  /* The offset uses the independent `translate` property, and the card hover
+     below uses `transform`. Splitting them matters because an element can be
+     both a reveal target and a card that lifts, and a `transition` shorthand
+     replaces rather than merges: whichever rule wins erases the other's list.
+     Owning one property each, plus `.js .card-lift` naming all four, means
+     nothing gets silently dropped. */
   .js .reveal {
     opacity: 0;
     translate: 0 1.25rem;
@@ -259,14 +263,6 @@
     }
   }
 
-  /* The hover and press lifts are motion. Keep the depth, drop the movement. */
-  @media (prefers-reduced-motion: reduce) {
-    .hover\:-translate-y-0\.5:hover,
-    .active\:translate-y-px:active {
-      transform: none;
-    }
-  }
-
   /* Cards that rise under the cursor.
    *
    * Quicker up than down: the lift answers the cursor immediately, the settle
@@ -287,8 +283,12 @@
       transform 420ms var(--ease-lift);
   }
 
-  .card-lift:hover {
-    transform: translateY(-2px);
+  /* Gated the way Tailwind gates its own hover: utilities. Ungated, a tap on a
+     phone leaves the card stuck in the raised state. */
+  @media (hover: hover) {
+    .card-lift:hover {
+      transform: translateY(-2px);
+    }
   }
 
   .js .card-lift:hover {
@@ -305,11 +305,40 @@
     transition-duration: 240ms;
   }
 
+  /* Keep the depth, drop the movement. Has to outrank `.js .card-lift`, and
+     has to name `translate` as well as `transform`, because the two halves of
+     this system move via different properties. */
   @media (prefers-reduced-motion: reduce) {
-    .card-lift,
-    .card-lift-icon {
+    .js .card-lift,
+    .js .card-lift .card-lift-icon,
+    .js .press {
       transition: none;
     }
+
+    /* Scoped through `.js` so these win on specificity rather than on where
+       they happen to sit in the file. */
+    .js .card-lift:hover {
+      transform: none;
+    }
+
+    .js .press:active {
+      translate: none;
+    }
+  }
+
+  /* Buttons own their press movement and its transition together. Tailwind
+     compiles translate utilities to the `translate` property, so a transition
+     list naming `transform` never animated the press at all. One rule for both
+     means they cannot drift apart again. */
+  .press {
+    transition:
+      background-color 200ms var(--ease-lift),
+      box-shadow 200ms var(--ease-lift),
+      translate 200ms var(--ease-lift);
+  }
+
+  .press:active {
+    translate: 0 1px;
   }
 
   /* The dot you see is small; the button you tap is not. Keeps the indicator

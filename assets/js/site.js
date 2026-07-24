@@ -225,12 +225,22 @@
       return;
     }
 
+    function show(item) {
+      item.classList.add("is-visible");
+      observer.unobserve(item);
+      // The stagger belongs to the entrance only. Left in place, the inline
+      // delay would also hold back the hover lift, since .js .card-lift now
+      // transitions box-shadow and transform through the same declaration.
+      // Longest entrance is 350ms of delay plus a 700ms fade.
+      window.setTimeout(function () {
+        item.style.transitionDelay = "";
+      }, 1100);
+    }
+
     const observer = new IntersectionObserver(
-      function (entries, obs) {
+      function (entries) {
         entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-visible");
-          obs.unobserve(entry.target);
+          if (entry.isIntersecting) show(entry.target);
         });
       },
       { rootMargin: "0px 0px -10% 0px", threshold: 0.08 }
@@ -247,12 +257,12 @@
       pending = 0;
       items.forEach(function (item) {
         if (item.classList.contains("is-visible")) return;
-        if (item.getBoundingClientRect().top < window.innerHeight) {
-          item.classList.add("is-visible");
-          observer.unobserve(item);
-        } else {
-          pending++;
-        }
+        // Only rescue what has left the viewport entirely. Anything looser
+        // fires before the observer's rootMargin and threshold would have, so
+        // the net quietly becomes the real trigger and the tuned entrance
+        // never runs.
+        if (item.getBoundingClientRect().bottom < 0) show(item);
+        else pending++;
       });
       if (!pending) window.removeEventListener("scroll", onScroll);
     }
