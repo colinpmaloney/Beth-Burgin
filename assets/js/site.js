@@ -236,6 +236,38 @@
       { rootMargin: "0px 0px -10% 0px", threshold: 0.08 }
     );
 
+    // Safety net. A fast flick can scroll an element past the viewport between
+    // observer callbacks, and since each element is unobserved once revealed,
+    // one that never fires would stay invisible for good. Anything already
+    // scrolled past gets revealed regardless. Detaches once nothing is left.
+    let pending = items.length;
+    let ticking = false;
+
+    function sweep() {
+      pending = 0;
+      items.forEach(function (item) {
+        if (item.classList.contains("is-visible")) return;
+        if (item.getBoundingClientRect().top < window.innerHeight) {
+          item.classList.add("is-visible");
+          observer.unobserve(item);
+        } else {
+          pending++;
+        }
+      });
+      if (!pending) window.removeEventListener("scroll", onScroll);
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        ticking = false;
+        sweep();
+      });
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     // Stagger siblings slightly so groups of cards cascade rather than snap in together.
     items.forEach(function (item) {
       const siblings = item.parentElement
