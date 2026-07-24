@@ -17,33 +17,51 @@
    *   canvas / surface / sunk   light grounds, lightest to least light
    *   line / line-strong        hairlines and borders
    *   ink / muted               text on light
-   *   accent                    the single emphasis channel
+   *   accent / accent-soft      the single emphasis channel, and its pressed state
    *   inverse*                  dark panels, and the three text weights on them
    *
-   * Current scheme: white, grey, black. High contrast on purpose, and it suits
-   * a black-and-white portrait better than a tinted palette would.
+   * Current scheme: sea and sand. Sand is barely there -- `sunk` and `line` are
+   * warm by a few points, enough to stop the page reading as printer white,
+   * nowhere near enough to be beige. All of the actual colour is one deep teal
+   * in `accent`, so it lands on the few things that matter (pull-quotes, the
+   * quote marks, the FAQ markers, buttons under the cursor) instead of being
+   * spread everywhere at low strength.
+   *
+   * `accent` has to work as text AND as a button ground under white text, which
+   * pins it dark: it clears 5.79:1 on canvas, and white clears 5.79:1 on it.
+   * A turquoise closer to open water sits around 2.4:1 and cannot carry either.
+   * That is what --color-sea is for.
    * ------------------------------------------------------------------ */
   --color-canvas: #fafafa;
   --color-surface: #ffffff;
-  --color-sunk: #f2f2f4;
-  --color-line: #e4e4e8;
-  --color-line-strong: #cfcfd6;
-  --color-ink: #18181b;
-  --color-muted: #62626b;
-  --color-accent: #000000;
-  --color-accent-soft: #303036;
-  --color-inverse: #141416;
-  --color-inverse-soft: #2b2b31;
+  --color-sunk: #f1f0ec;
+  --color-line: #e2e0d9;
+  --color-line-strong: #c9c6bc;
+  --color-ink: #17191a;
+  --color-muted: #5a6062;
+  --color-accent: #0d6d78;
+  --color-accent-soft: #0a555e;
+  --color-inverse: #0f1a1d;
+  --color-inverse-soft: #22333a;
   --color-inverse-ink: #fafafa;
-  --color-inverse-body: #d7d7dc;
-  --color-inverse-muted: #a1a1a9;
+  --color-inverse-body: #d4dcdd;
+  --color-inverse-muted: #9dabae;
 
-  /* Previous scheme, kept so it is one paste away if the monochrome is too
-     stark. Warm sand and clay:
-       canvas #faf7f2  surface #faf7f2  sunk #f1e9dd  line #e3d6c4
-       ink #221f1c  muted #6d645b  accent #bd6f4c  accent-soft #9d5636
-       inverse #2c362f  inverse-soft #47544a
-       inverse-ink #faf7f2  inverse-body #f1e9dd  inverse-muted #e3d6c4 */
+  /* DECORATIVE ONLY. Open-water turquoise, too light to carry text or to be a
+     ground under white text -- roughly 2.4:1 against either. Use it for washes
+     and large fills, never for anything a reader has to make out. */
+  --color-sea: #2c9aa6;
+  --color-sea-wash: #e7f1f2;
+
+  /* Previous scheme, one paste away if the colour is too much. White, grey,
+     black:
+       canvas #fafafa  surface #ffffff  sunk #f2f2f4
+       line #e4e4e8  line-strong #cfcfd6
+       ink #18181b  muted #62626b  accent #000000  accent-soft #303036
+       inverse #141416  inverse-soft #2b2b31
+       inverse-ink #fafafa  inverse-body #d7d7dc  inverse-muted #a1a1a9
+     The hero texture is tinted in scripts/hero-texture.py, so reverting that
+     too means setting SHADOW/HIGHLIGHT there back to neutral greys. */
 
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -149,14 +167,15 @@
     border-radius: 2px;
   }
 
-  /* A black ring is invisible against the dark panels, so they invert it. */
+  /* The accent ring is dark enough to disappear against the dark panels, so
+     they invert it. */
   .bg-inverse :focus-visible,
   .bg-inverse-soft :focus-visible {
     outline-color: var(--color-inverse-ink);
   }
 
   ::selection {
-    background: var(--color-ink);
+    background: var(--color-accent);
     color: var(--color-inverse-ink);
   }
 }
@@ -448,7 +467,10 @@
     height: 100%;
     object-fit: cover;
     object-position: 50% 30%;
-    filter: grayscale(1);
+    /* Held back rather than drained. The file is tinted at generation time, so
+       there is no grey to hue-rotate, and a real photograph dropped in here
+       keeps its own colour at slightly less than full strength. */
+    filter: saturate(0.9);
     opacity: var(--hero-photo);
 
     /* Three masks intersected: fade out at the bottom so the section hands off
