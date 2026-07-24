@@ -58,29 +58,157 @@
       document.documentElement.classList.add("js");
     </script>
 
-    <!-- Local business structured data. This is what Google reads for the map listing. -->
+    <!-- Structured data. Google reads this for the business listing, and answer
+         engines read it to lift facts (credentials, price, FAQ answers) without
+         having to parse the page. Every value here is also visible on the page. -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "HealthAndBeautyBusiness",
-        "name": "Beth Burgin Advanced Rolfer",
-        "description": "Advanced Rolfing® Structural Integration and myofascial release in Wilmington, NC.",
-        "url": "https://www.bethburgin.com/",
-        "telephone": "+1-910-707-4793",
-        "email": "rolferbeth@gmail.com",
-        "priceRange": "$$",
-        "image": "https://www.bethburgin.com/assets/img/og-image.jpg",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "321 N Front Street, Cotton Exchange Executive Offices",
-          "addressLocality": "Wilmington",
-          "addressRegion": "NC",
-          "postalCode": "28401",
-          "addressCountry": "US"
-        },
-        "sameAs": [
-          "https://www.instagram.com/rolferbeth/",
-          "https://www.facebook.com/rolferbeth/"
+        "@graph": [
+          {
+            "@type": "HealthAndBeautyBusiness",
+            "@id": "https://www.bethburgin.com/#practice",
+            "name": "Beth Burgin Advanced Rolfer",
+            "description": "Advanced Rolfing\u00ae Structural Integration and myofascial release in Wilmington, NC.",
+            "url": "https://www.bethburgin.com/",
+            "telephone": "+1-910-707-4793",
+            "email": "rolferbeth@gmail.com",
+            "priceRange": "$$",
+            "image": "https://www.bethburgin.com/assets/img/og-image.jpg",
+            "founder": { "@id": "https://www.bethburgin.com/#beth" },
+            "employee": { "@id": "https://www.bethburgin.com/#beth" },
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "321 N Front Street, Cotton Exchange Executive Offices",
+              "addressLocality": "Wilmington",
+              "addressRegion": "NC",
+              "postalCode": "28401",
+              "addressCountry": "US"
+            },
+            "areaServed": [
+              { "@type": "City", "name": "Wilmington, NC" },
+              { "@type": "City", "name": "Hampstead, NC" },
+              { "@type": "City", "name": "Wrightsville Beach, NC" }
+            ],
+            "makesOffer": [
+              {
+                "@type": "Offer",
+                "priceCurrency": "USD",
+                "price": "140",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Rolfing\u00ae Structural Integration session",
+                  "description": "A single 75 to 90 minute session of Advanced Rolfing\u00ae Structural Integration.",
+                  "serviceType": "Rolfing Structural Integration",
+                  "provider": { "@id": "https://www.bethburgin.com/#practice" }
+                }
+              }
+            ],
+            "sameAs": [
+              "https://www.instagram.com/rolferbeth/",
+              "https://www.facebook.com/rolferbeth/"
+            ]
+          },
+          {
+            "@type": "Person",
+            "@id": "https://www.bethburgin.com/#beth",
+            "name": "Beth Burgin",
+            "jobTitle": "Certified Advanced Rolfer\u00ae",
+            "description": "Manual and movement therapist practising Rolfing\u00ae Structural Integration in Wilmington, North Carolina since 2000.",
+            "worksFor": { "@id": "https://www.bethburgin.com/#practice" },
+            "knowsAbout": [
+              "Rolfing Structural Integration",
+              "Myofascial release",
+              "Visceral manipulation",
+              "Somatic movement education"
+            ],
+            "hasCredential": [
+              {
+                "@type": "EducationalOccupationalCredential",
+                "credentialCategory": "certification",
+                "name": "Certified Advanced Rolfer\u00ae",
+                "recognizedBy": {
+                  "@type": "Organization",
+                  "name": "Dr. Ida Rolf Institute\u00ae",
+                  "url": "https://rolf.org/"
+                }
+              },
+              {
+                "@type": "EducationalOccupationalCredential",
+                "credentialCategory": "license",
+                "name": "North Carolina Licensed Massage and Bodywork Therapist #1532",
+                "recognizedBy": {
+                  "@type": "Organization",
+                  "name": "North Carolina Board of Massage and Bodywork Therapy",
+                  "url": "https://www.bmbt.org/"
+                }
+              }
+            ],
+            "memberOf": {
+              "@type": "Organization",
+              "name": "Dr. Ida Rolf Institute\u00ae",
+              "url": "https://rolf.org/"
+            },
+            "sameAs": [
+              "https://mms.rolf.org/members/directory/ROLF_profile.php?mid=1245003829",
+              "https://www.instagram.com/rolferbeth/",
+              "https://www.facebook.com/rolferbeth/"
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://www.bethburgin.com/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Does Rolfing hurt?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "It can be intense in places, but it shouldn't be something you grit your teeth through. Beth adjusts as she goes, based on what you tell her. Work that makes you brace doesn't produce lasting change, so there's no reason to push past what you can stay relaxed through."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How is Rolfing different from massage?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Massage generally aims at relaxation and relief in the moment. Rolfing aims at structure: how your body is organized in gravity, and how that organization creates or resolves your symptoms. Sessions follow a plan and build on each other, so the changes hold rather than fade by the weekend."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How many Rolfing sessions will I need?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "It depends what you're bringing in. A specific, recent complaint can often be handled as fix-it work in one to three sessions. Longer-standing patterns usually want a series of three, five, or the full ten. You don't have to decide up front. Come once and you'll both know a lot more."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What should I wear to a Rolfing session?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Comfortable clothing you can move in, like running shorts and a sports bra, or fitted athletic wear. Part of the session happens standing and walking, so Beth needs to be able to see how you move. Wear what you'd feel at ease in."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Where do I park at the Cotton Exchange?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Free parking is available in the Cotton Exchange lot. The entrance is on Grace Street, directly behind the building. Bring your ticket up and Beth will validate it."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do you take insurance?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sessions are self-pay. Some clients use HSA or FSA funds, or submit a receipt to their plan. Give Beth a call and she can tell you what documentation she can provide."
+                }
+              }
+            ]
+          }
         ]
       }
     </script>
@@ -516,7 +644,15 @@
                   <span class="mt-2 size-1.5 shrink-0 rounded-full bg-clay" aria-hidden="true"></span>
                   <span class="text-[0.95rem] leading-relaxed text-muted"
                     ><span class="font-medium text-ink">Licensed</span>: NC Licensed Massage &amp;
-                    Bodywork Therapist #1532; member of the Dr. Ida Rolf Institute since 2000</span
+                    Bodywork Therapist #1532; member of the
+                    <a
+                      href="https://rolf.org/"
+                      target="_blank"
+                      rel="noopener"
+                      class="underline decoration-sand-deep decoration-2 underline-offset-2 transition-colors hover:text-ink hover:decoration-clay"
+                      >Dr. Ida Rolf Institute</a
+                    >
+                    since 2000</span
                   >
                 </li>
               </ul>
