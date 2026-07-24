@@ -1,5 +1,5 @@
 /**
- * beth-burgin.com — site behaviour
+ * beth-burgin.com site behaviour
  *
  * Four small, independent pieces:
  *   1. Mobile menu (open/close, backdrop, Escape, scroll lock, focus return)
