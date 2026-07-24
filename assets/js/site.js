@@ -299,14 +299,28 @@
       return d;
     }
 
-    function render() {
-      const step = slides[0].offsetWidth * 0.72;
+    // Reviews differ a lot in length. Give every card the tallest one's height
+    // so the section keeps a steady size as it rotates, and a short review sits
+    // in a card of its own rather than marooned in a tall empty box.
+    // Only run on load, resize, and webfont swap: it forces a reflow.
+    function measure() {
+      slides.forEach(function (slide) {
+        slide.style.height = "";
+      });
 
       let tallest = 0;
       slides.forEach(function (slide) {
         tallest = Math.max(tallest, slide.offsetHeight);
       });
+
+      slides.forEach(function (slide) {
+        slide.style.height = tallest + "px";
+      });
       track.style.height = tallest + "px";
+    }
+
+    function render() {
+      const step = slides[0].offsetWidth * 0.72;
 
       slides.forEach(function (slide, i) {
         const d = distance(i);
@@ -408,20 +422,24 @@
       else if (event.key === "ArrowRight") { event.preventDefault(); show(active + 1, true); }
     });
 
-    // Drag or swipe across the cards.
+    // Swipe. Deliberately touch and pen only: with a mouse, dragging across a
+    // quote is how you select it, and hijacking that to change slides means you
+    // can't copy a review. Mouse users have the arrows, dots, and side cards.
     track.addEventListener("pointerdown", function (event) {
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-      dragFrom = event.clientX;
+      if (event.pointerType === "mouse") return;
+      dragFrom = { x: event.clientX, y: event.clientY };
       swiped = false;
     });
     track.addEventListener("pointerup", function (event) {
-      if (dragFrom === null) return;
-      const moved = event.clientX - dragFrom;
+      if (!dragFrom) return;
+      const dx = event.clientX - dragFrom.x;
+      const dy = event.clientY - dragFrom.y;
       dragFrom = null;
-      if (Math.abs(moved) < SWIPE) return;
+      // Ignore anything that was mostly a vertical scroll.
+      if (Math.abs(dx) < SWIPE || Math.abs(dx) < Math.abs(dy)) return;
       swiped = true;
-      show(active + (moved < 0 ? 1 : -1), true);
-      // Let the click that follows the drag pass by before re-arming.
+      show(active + (dx < 0 ? 1 : -1), true);
+      // Let the click that follows the swipe pass by before re-arming.
       window.setTimeout(function () { swiped = false; }, 0);
     });
     track.addEventListener("pointercancel", function () { dragFrom = null; });
@@ -431,13 +449,22 @@
     let resizeTimer = null;
     window.addEventListener("resize", function () {
       window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(render, 150);
+      resizeTimer = window.setTimeout(function () {
+        measure();
+        render();
+      }, 150);
     });
 
     // Card heights depend on the webfont, so measure again once it lands.
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        measure();
+        render();
+      });
+    }
 
     syncToggle();
+    measure();
     render();
     schedule();
   })();
