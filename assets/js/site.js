@@ -152,7 +152,10 @@
     const header = document.querySelector("[data-header]");
     if (!header) return;
 
-    const scrolledClasses = ["bg-bone/85", "backdrop-blur-md", "shadow-soft"];
+    // 95% rather than something more see-through: the nav is text-muted, and
+    // when a dark section slides under a thinner background the effective
+    // contrast drops under 4.5:1.
+    const scrolledClasses = ["bg-bone/95", "backdrop-blur-md", "shadow-soft"];
 
     function update() {
       header.classList.toggle(scrolledClasses[0], window.scrollY > 16);
@@ -302,34 +305,44 @@
     // Reviews differ a lot in length. Give every card the tallest one's height
     // so the section keeps a steady size as it rotates, and a short review sits
     // in a card of its own rather than marooned in a tall empty box.
+    // From 40rem up there's enough width that every card can share the tallest
+    // one's height without the short reviews looking hollow, and a fixed frame
+    // is calmer. On a phone the same trick leaves the short reviews mostly
+    // empty, so there each card keeps its own height and the track follows
+    // whichever one is in focus.
+    const wide = window.matchMedia("(min-width: 40rem)");
+
     // Only run on load, resize, and webfont swap. It reads geometry after
     // writing styles, which forces a reflow, so reads and writes are kept in
-    // separate passes and the card width is cached here for render() to reuse.
+    // separate passes and the results are cached for render() to reuse.
+    let heights = [];
     let tallest = 0;
     let step = 0;
 
     function measure() {
-      // Clear first so each card reports its natural height again. Skipped on
-      // the very first run, when nothing has been set.
-      if (tallest) {
-        slides.forEach(function (slide) {
-          slide.style.height = "";
-        });
-      }
+      // Clear first so each card reports its natural height again.
+      slides.forEach(function (slide) {
+        slide.style.height = "";
+      });
 
       // Read pass.
-      tallest = 0;
-      slides.forEach(function (slide) {
-        const height = slide.offsetHeight;
-        if (height > tallest) tallest = height;
+      heights = slides.map(function (slide) {
+        return slide.offsetHeight;
       });
+      tallest = Math.max.apply(null, heights);
       step = slides[0].offsetWidth * 0.72;
 
       // Write pass.
-      slides.forEach(function (slide) {
-        slide.style.height = tallest + "px";
-      });
-      track.style.height = tallest + "px";
+      if (wide.matches) {
+        slides.forEach(function (slide) {
+          slide.style.height = tallest + "px";
+        });
+      }
+      fitTrack();
+    }
+
+    function fitTrack() {
+      track.style.height = (wide.matches ? tallest : heights[active]) + "px";
     }
 
     // Writes only. Reading the card width here instead would force a reflow on
@@ -368,6 +381,9 @@
         else dot.removeAttribute("aria-current");
       });
 
+      // Cheap: heights were cached by measure(), so this writes without reading.
+      fitTrack();
+
       if (status) status.textContent = "Review " + (active + 1) + " of " + count;
     }
 
@@ -380,7 +396,7 @@
     function schedule() {
       window.clearInterval(timer);
       timer = null;
-      if (!wide.matches || !wanted || hovering || document.hidden) return;
+      if (!wanted || hovering || document.hidden) return;
       timer = window.setInterval(function () {
         show(active + 1);
       }, DELAY);
@@ -459,58 +475,16 @@
 
     document.addEventListener("visibilitychange", schedule);
 
-    /* ---------------------------------------------------------------- *
-     * Phones get the plain stack instead (see the CSS). Everything the
-     * carousel sets is inline, so switching off means handing the cards back
-     * to the stylesheet untouched.
-     * ---------------------------------------------------------------- */
-    const wide = window.matchMedia("(min-width: 40rem)");
-
-    function enable() {
-      root.setAttribute("aria-roledescription", "carousel");
+    // Crossing 40rem switches between shared and natural card heights.
+    wide.addEventListener("change", function () {
       measure();
       render();
-      schedule();
-    }
-
-    function disable() {
-      window.clearInterval(timer);
-      timer = null;
-      tallest = 0;
-
-      slides.forEach(function (slide) {
-        slide.style.height = "";
-        slide.style.transform = "";
-        slide.style.opacity = "";
-        slide.style.filter = "";
-        slide.style.zIndex = "";
-        slide.style.boxShadow = "";
-        slide.style.pointerEvents = "";
-        slide.style.transition = "";
-        slide.removeAttribute("aria-hidden");
-        delete slide.dataset.position;
-        delete slide.dataset.d;
-      });
-      track.style.height = "";
-
-      // Stacked, every review is simply on the page, so calling it a carousel
-      // would misdescribe it.
-      root.removeAttribute("aria-roledescription");
-      if (status) status.textContent = "";
-    }
-
-    function sync() {
-      if (wide.matches) enable();
-      else disable();
-    }
-
-    wide.addEventListener("change", sync);
+    });
 
     let resizeTimer = null;
     window.addEventListener("resize", function () {
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(function () {
-        if (!wide.matches) return;
         measure();
         render();
       }, 150);
@@ -519,14 +493,15 @@
     // Card heights depend on the webfont, so measure again once it lands.
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function () {
-        if (!wide.matches) return;
         measure();
         render();
       });
     }
 
     syncToggle();
-    sync();
+    measure();
+    render();
+    schedule();
   })();
 
   (function footerYear() {

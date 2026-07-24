@@ -143,35 +143,39 @@
     gap: 1.25rem;
   }
 
-  /* Phones keep the stack. A carousel has to hold every card at the tallest
-     one's height, and the longest review here is half as tall again as the
-     shortest, so on a narrow screen the short ones end up mostly empty. There
-     is also little room beside the card for the neighbours to show. */
+  .js .carousel-track {
+    display: block;
+    position: relative;
+    /* Holds the space until JS measures the cards, so nothing jumps. */
+    min-height: 22rem;
+    /* Horizontal drags move the carousel; vertical ones still scroll. */
+    touch-action: pan-y;
+    /* On phones each card keeps its own height, so the track resizes as it
+       rotates. Animating it means the page below settles rather than jumps. */
+    transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js .carousel-slide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Narrow enough that the neighbouring cards still peek in on a phone. */
+    width: 84%;
+    transition:
+      transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.5s ease,
+      filter 0.5s ease;
+    will-change: transform, opacity;
+  }
+
+  /* The off-centre cards are targets, not just decoration. */
+  .js .carousel-slide[data-position="side"] {
+    cursor: pointer;
+  }
+
   @media (width >= 40rem) {
-    .js .carousel-track {
-      display: block;
-      position: relative;
-      /* Holds the space until JS measures the tallest card, so nothing jumps. */
-      min-height: 22rem;
-      /* Horizontal drags move the carousel; vertical ones still scroll. */
-      touch-action: pan-y;
-    }
-
     .js .carousel-slide {
-      position: absolute;
-      top: 50%;
-      left: 50%;
       width: 74%;
-      transition:
-        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-        opacity 0.5s ease,
-        filter 0.5s ease;
-      will-change: transform, opacity;
-    }
-
-    /* The off-centre cards are targets, not just decoration. */
-    .js .carousel-slide[data-position="side"] {
-      cursor: pointer;
     }
   }
 
@@ -188,6 +192,7 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .js .carousel-track,
     .js .carousel-slide {
       transition: none;
     }
