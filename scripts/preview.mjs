@@ -36,11 +36,22 @@ const title = html.match(/<title>([\s\S]*?)<\/title>/)[1];
 let body = html.slice(html.indexOf("<body"), html.lastIndexOf("</body>"));
 body = body.slice(body.indexOf(">") + 1);
 
-// The photo isn't in the repo yet. Show the placeholder the site would show
-// anyway, rather than letting a 404 do it.
-body = body.replace(/<img\s+src="\/assets\/img\/beth-portrait\.jpg"[\s\S]*?\/>/, "");
-body = body.replace('id="portrait-fallback"\n                    hidden', 'id="portrait-fallback"');
-body = body.replace(/id="portrait-fallback"\s+hidden/, 'id="portrait-fallback"');
+// Nothing serves /assets/img here, so every referenced image becomes a data
+// URI. Files that don't exist are left alone: their onerror handlers already do
+// the right thing (the portrait swaps in its placeholder, the hero texture
+// removes itself).
+const MIME = { webp: "image/webp", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", svg: "image/svg+xml" };
+
+for (const ref of new Set(body.match(/\/assets\/img\/[\w.-]+/g) ?? [])) {
+  const ext = ref.split(".").pop().toLowerCase();
+  if (!MIME[ext]) continue;
+  try {
+    const b64 = (await readFile(join(dist, ref.replace(/^\//, "")))).toString("base64");
+    body = body.replaceAll(ref, `data:${MIME[ext]};base64,${b64}`);
+  } catch {
+    console.warn(`  missing, left to its fallback: ${ref}`);
+  }
+}
 
 // Cross-origin frames are blocked here. The styled fallback underneath is the
 // whole point of that markup, so just let it show.
