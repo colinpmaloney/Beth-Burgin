@@ -1266,9 +1266,11 @@
 
     <script src="/assets/js/site.js" defer></script>
 
-    <!-- Vercel Web Analytics. Same-origin, cookieless, no consent banner needed.
-         Served by Vercel once Web Analytics is enabled on the project; it 404s
-         locally and anywhere else, which is why the preview build strips it. -->
+    <!-- Vercel Web Analytics and Speed Insights. Both are same-origin and
+         cookieless, so no consent banner is needed. Each is served by Vercel
+         only once that product is enabled on the project; both 404 locally and
+         anywhere else, which is why the preview build strips them. -->
     <script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="/_vercel/speed-insights/script.js"></script>
   </body>
 </html>
