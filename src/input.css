@@ -143,31 +143,35 @@
     gap: 1.25rem;
   }
 
-  .js .carousel-track {
-    display: block;
-    position: relative;
-    /* Holds the space until JS measures the tallest card, so nothing jumps. */
-    min-height: 22rem;
-    /* Horizontal drags move the carousel; vertical ones still scroll the page. */
-    touch-action: pan-y;
-  }
-
-  .js .carousel-slide {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    /* Narrow enough that the neighbouring cards still peek in on a phone. */
-    width: 84%;
-    transition:
-      transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.5s ease,
-      filter 0.5s ease;
-    will-change: transform, opacity;
-  }
-
+  /* Phones keep the stack. A carousel has to hold every card at the tallest
+     one's height, and the longest review here is half as tall again as the
+     shortest, so on a narrow screen the short ones end up mostly empty. There
+     is also little room beside the card for the neighbours to show. */
   @media (width >= 40rem) {
+    .js .carousel-track {
+      display: block;
+      position: relative;
+      /* Holds the space until JS measures the tallest card, so nothing jumps. */
+      min-height: 22rem;
+      /* Horizontal drags move the carousel; vertical ones still scroll. */
+      touch-action: pan-y;
+    }
+
     .js .carousel-slide {
+      position: absolute;
+      top: 50%;
+      left: 50%;
       width: 74%;
+      transition:
+        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.5s ease,
+        filter 0.5s ease;
+      will-change: transform, opacity;
+    }
+
+    /* The off-centre cards are targets, not just decoration. */
+    .js .carousel-slide[data-position="side"] {
+      cursor: pointer;
     }
   }
 
@@ -181,11 +185,6 @@
     .js .carousel-slide {
       width: 52%;
     }
-  }
-
-  /* The off-centre cards are targets, not just decoration. */
-  .js .carousel-slide[data-position="side"] {
-    cursor: pointer;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -302,26 +302,39 @@
     // Reviews differ a lot in length. Give every card the tallest one's height
     // so the section keeps a steady size as it rotates, and a short review sits
     // in a card of its own rather than marooned in a tall empty box.
-    // Only run on load, resize, and webfont swap: it forces a reflow.
+    // Only run on load, resize, and webfont swap. It reads geometry after
+    // writing styles, which forces a reflow, so reads and writes are kept in
+    // separate passes and the card width is cached here for render() to reuse.
+    let tallest = 0;
+    let step = 0;
+
     function measure() {
-      slides.forEach(function (slide) {
-        slide.style.height = "";
-      });
+      // Clear first so each card reports its natural height again. Skipped on
+      // the very first run, when nothing has been set.
+      if (tallest) {
+        slides.forEach(function (slide) {
+          slide.style.height = "";
+        });
+      }
 
-      let tallest = 0;
+      // Read pass.
+      tallest = 0;
       slides.forEach(function (slide) {
-        tallest = Math.max(tallest, slide.offsetHeight);
+        const height = slide.offsetHeight;
+        if (height > tallest) tallest = height;
       });
+      step = slides[0].offsetWidth * 0.72;
 
+      // Write pass.
       slides.forEach(function (slide) {
         slide.style.height = tallest + "px";
       });
       track.style.height = tallest + "px";
     }
 
+    // Writes only. Reading the card width here instead would force a reflow on
+    // every rotation rather than only when the layout actually changes.
     function render() {
-      const step = slides[0].offsetWidth * 0.72;
-
       slides.forEach(function (slide, i) {
         const d = distance(i);
         const away = Math.abs(d);
@@ -367,7 +380,7 @@
     function schedule() {
       window.clearInterval(timer);
       timer = null;
-      if (!wanted || hovering || document.hidden) return;
+      if (!wide.matches || !wanted || hovering || document.hidden) return;
       timer = window.setInterval(function () {
         show(active + 1);
       }, DELAY);
@@ -446,10 +459,58 @@
 
     document.addEventListener("visibilitychange", schedule);
 
+    /* ---------------------------------------------------------------- *
+     * Phones get the plain stack instead (see the CSS). Everything the
+     * carousel sets is inline, so switching off means handing the cards back
+     * to the stylesheet untouched.
+     * ---------------------------------------------------------------- */
+    const wide = window.matchMedia("(min-width: 40rem)");
+
+    function enable() {
+      root.setAttribute("aria-roledescription", "carousel");
+      measure();
+      render();
+      schedule();
+    }
+
+    function disable() {
+      window.clearInterval(timer);
+      timer = null;
+      tallest = 0;
+
+      slides.forEach(function (slide) {
+        slide.style.height = "";
+        slide.style.transform = "";
+        slide.style.opacity = "";
+        slide.style.filter = "";
+        slide.style.zIndex = "";
+        slide.style.boxShadow = "";
+        slide.style.pointerEvents = "";
+        slide.style.transition = "";
+        slide.removeAttribute("aria-hidden");
+        delete slide.dataset.position;
+        delete slide.dataset.d;
+      });
+      track.style.height = "";
+
+      // Stacked, every review is simply on the page, so calling it a carousel
+      // would misdescribe it.
+      root.removeAttribute("aria-roledescription");
+      if (status) status.textContent = "";
+    }
+
+    function sync() {
+      if (wide.matches) enable();
+      else disable();
+    }
+
+    wide.addEventListener("change", sync);
+
     let resizeTimer = null;
     window.addEventListener("resize", function () {
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(function () {
+        if (!wide.matches) return;
         measure();
         render();
       }, 150);
@@ -458,15 +519,14 @@
     // Card heights depend on the webfont, so measure again once it lands.
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function () {
+        if (!wide.matches) return;
         measure();
         render();
       });
     }
 
     syncToggle();
-    measure();
-    render();
-    schedule();
+    sync();
   })();
 
   (function footerYear() {

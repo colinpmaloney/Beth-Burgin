@@ -6,7 +6,7 @@
  *
  * dist/ is what Vercel (or Netlify, Cloudflare Pages, GitHub Pages) publishes.
  */
-import { cp, mkdir, rm } from "node:fs/promises";
+import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -26,4 +26,19 @@ for (const entry of entries) {
   await cp(from, join(dist, entry), { recursive: true });
 }
 
-console.log(`Built dist/ (${entries.filter((e) => existsSync(join(root, e))).join(", ")})`);
+// The hero photo is optional. When it isn't in the repo, drop the <img> and
+// show the placeholder directly: leaving the tag in would 404 on every visit
+// and put a red line in the console, which reads as a broken site.
+const hasPortrait = existsSync(join(root, "assets", "img", "beth-portrait.jpg"));
+if (!hasPortrait) {
+  const page = join(dist, "index.html");
+  const html = (await readFile(page, "utf8"))
+    .replace(/[ \t]*<!-- portrait:start -->[\s\S]*?<!-- portrait:end -->\n/, "")
+    .replace(/(id="portrait-fallback")\s+hidden/, "$1");
+  await writeFile(page, html);
+}
+
+console.log(
+  `Built dist/ (${entries.filter((e) => existsSync(join(root, e))).join(", ")})` +
+    (hasPortrait ? " with hero photo" : " without hero photo, showing the placeholder")
+);

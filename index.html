@@ -41,6 +41,15 @@
       type="font/woff2"
       crossorigin
     />
+    <!-- The hero headline sets "Integrate." in the italic, so it is needed for
+         the largest paint, not a late extra. -->
+    <link
+      rel="preload"
+      href="/assets/fonts/fraunces-italic-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link rel="stylesheet" href="/assets/css/site.css" />
 
     <!-- Set before first paint so scroll-reveal never flashes un-animated content, and stays
@@ -316,6 +325,7 @@
                     1200x1200). Square because the photo we have is a tight square crop; a taller
                     frame would cut the sides off. Until the file exists the placeholder shows.
                   -->
+                  <!-- portrait:start -->
                   <img
                     src="/assets/img/beth-portrait.jpg"
                     alt="Beth Burgin, Certified Advanced Rolfer"
@@ -324,6 +334,7 @@
                     class="aspect-square w-full object-cover object-top"
                     onerror="this.remove(); document.getElementById('portrait-fallback').hidden = false;"
                   />
+                  <!-- portrait:end -->
                   <div
                     id="portrait-fallback"
                     hidden
@@ -586,7 +597,7 @@
 
             <!-- Short series - highlighted -->
             <article class="reveal relative flex flex-col rounded-3xl bg-moss-deep p-8 text-bone shadow-lift">
-              <span class="absolute top-8 right-8 rounded-full bg-clay px-3 py-1 text-[0.7rem] font-semibold tracking-wider text-bone uppercase"
+              <span class="absolute top-8 right-8 rounded-full bg-clay-deep px-3 py-1 text-[0.7rem] font-semibold tracking-wider text-bone uppercase"
                 >Most common</span
               >
               <h3 class="font-display text-2xl">Short series</h3>
@@ -776,7 +787,8 @@
             </figure>
             </div>
 
-            <div class="mt-10 flex items-center justify-center gap-3 sm:gap-5">
+            <!-- Controls belong to the carousel, so they go with it on phones. -->
+            <div class="mt-10 hidden items-center justify-center gap-3 sm:flex sm:gap-5">
               <button
                 type="button"
                 class="inline-flex size-11 items-center justify-center rounded-full border border-sand-deep bg-bone text-ink transition-colors hover:bg-sand"
@@ -946,58 +958,50 @@
                 </h2>
 
                 <dl class="reveal mt-10 space-y-7">
-                  <div class="flex gap-4">
-                    <span class="mt-0.5 shrink-0 text-clay" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
-                    </span>
-                    <div>
-                      <dt class="text-xs font-semibold tracking-[0.14em] text-sand-deep uppercase">Address</dt>
-                      <dd class="mt-1.5 leading-relaxed text-sand">
-                        Cotton Exchange Executive Offices<br />
-                        321 N Front Street<br />
-                        Wilmington, NC 28401
-                      </dd>
-                    </div>
+                  <div>
+                    <dt class="flex items-center gap-3 text-xs font-semibold tracking-[0.14em] text-sand-deep uppercase">
+                      <span class="shrink-0 text-clay" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5.5-8 12-8 12s-8-6.5-8-12a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg></span>
+                      Address
+                    </dt>
+                    <dd class="mt-2 pl-8 leading-relaxed text-sand">
+                              Cotton Exchange Executive Offices<br />
+                              321 N Front Street<br />
+                              Wilmington, NC 28401
+                    </dd>
                   </div>
 
-                  <div class="flex gap-4">
-                    <span class="mt-0.5 shrink-0 text-clay" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a2 2 0 0 1 2-2h1.6a1 1 0 0 1 1 .76l.9 3.6a1 1 0 0 1-.5 1.1l-1.5.8a12 12 0 0 0 5.7 5.7l.8-1.5a1 1 0 0 1 1.1-.5l3.6.9a1 1 0 0 1 .76 1V18a2 2 0 0 1-2 2A15 15 0 0 1 4 6Z" /></svg>
-                    </span>
-                    <div>
-                      <dt class="text-xs font-semibold tracking-[0.14em] text-sand-deep uppercase">Phone</dt>
-                      <dd class="mt-1.5">
-                        <a href="tel:+19107074793" class="-my-1 inline-block py-1.5 text-lg text-bone underline decoration-moss decoration-2 underline-offset-4 transition-colors hover:decoration-clay"
-                          >(910) 707-4793</a
-                        >
-                      </dd>
-                    </div>
+                  <div>
+                    <dt class="flex items-center gap-3 text-xs font-semibold tracking-[0.14em] text-sand-deep uppercase">
+                      <span class="shrink-0 text-clay" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a2 2 0 0 1 2-2h1.6a1 1 0 0 1 1 .76l.9 3.6a1 1 0 0 1-.5 1.1l-1.5.8a12 12 0 0 0 5.7 5.7l.8-1.5a1 1 0 0 1 1.1-.5l3.6.9a1 1 0 0 1 .76 1V18a2 2 0 0 1-2 2A15 15 0 0 1 4 6Z" /></svg></span>
+                      Phone
+                    </dt>
+                    <dd class="mt-2 pl-8">
+                              <a href="tel:+19107074793" class="-my-1 inline-block py-1.5 text-lg text-bone underline decoration-moss decoration-2 underline-offset-4 transition-colors hover:decoration-clay"
+                                >(910) 707-4793</a
+                              >
+                    </dd>
                   </div>
 
-                  <div class="flex gap-4">
-                    <span class="mt-0.5 shrink-0 text-clay" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6 8.5-6" /></svg>
-                    </span>
-                    <div>
-                      <dt class="text-xs font-semibold tracking-[0.14em] text-sand-deep uppercase">Email</dt>
-                      <dd class="mt-1.5">
-                        <a href="mailto:rolferbeth@gmail.com" class="-my-1 inline-block py-1.5 text-lg break-all text-bone underline decoration-moss decoration-2 underline-offset-4 transition-colors hover:decoration-clay"
-                          >rolferbeth@gmail.com</a
-                        >
-                      </dd>
-                    </div>
+                  <div>
+                    <dt class="flex items-center gap-3 text-xs font-semibold tracking-[0.14em] text-sand-deep uppercase">
+                      <span class="shrink-0 text-clay" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3.5 6.5 8.5 6 8.5-6" /></svg></span>
+                      Email
+                    </dt>
+                    <dd class="mt-2 pl-8">
+                              <a href="mailto:rolferbeth@gmail.com" class="-my-1 inline-block py-1.5 text-lg break-all text-bone underline decoration-moss decoration-2 underline-offset-4 transition-colors hover:decoration-clay"
+                                >rolferbeth@gmail.com</a
+                              >
+                    </dd>
                   </div>
 
-                  <div class="flex gap-4">
-                    <span class="mt-0.5 shrink-0 text-clay" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14" /><path d="M6.5 17v-3.5l1.3-3.6a2 2 0 0 1 1.9-1.4h4.6a2 2 0 0 1 1.9 1.4l1.3 3.6V17" /><path d="M6.5 13.5h11" /><circle cx="8.5" cy="15.2" r=".6" fill="currentColor" /><circle cx="15.5" cy="15.2" r=".6" fill="currentColor" /></svg>
-                    </span>
-                    <div>
-                      <dt class="text-xs font-semibold tracking-[0.14em] text-sand-deep uppercase">Parking</dt>
-                      <dd class="mt-1.5 leading-relaxed text-sand">
-                        Free validated parking in the Cotton Exchange lot. The entrance is on Grace Street, directly behind the building.
-                      </dd>
-                    </div>
+                  <div>
+                    <dt class="flex items-center gap-3 text-xs font-semibold tracking-[0.14em] text-sand-deep uppercase">
+                      <span class="shrink-0 text-clay" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14" /><path d="M6.5 17v-3.5l1.3-3.6a2 2 0 0 1 1.9-1.4h4.6a2 2 0 0 1 1.9 1.4l1.3 3.6V17" /><path d="M6.5 13.5h11" /><circle cx="8.5" cy="15.2" r=".6" fill="currentColor" /><circle cx="15.5" cy="15.2" r=".6" fill="currentColor" /></svg></span>
+                      Parking
+                    </dt>
+                    <dd class="mt-2 pl-8 leading-relaxed text-sand">
+                              Free validated parking in the Cotton Exchange lot. The entrance is on Grace Street, directly behind the building.
+                    </dd>
                   </div>
                 </dl>
 
