@@ -1,0 +1,19 @@
+{
+  "name": "beth-burgin-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Marketing site for Beth Burgin, Certified Advanced Rolfer — Wilmington, NC",
+  "type": "module",
+  "license": "UNLICENSED",
+  "scripts": {
+    "css": "tailwindcss -i ./src/input.css -o ./assets/css/site.css",
+    "dev": "npm run css -- --watch",
+    "serve": "npx --yes serve@14 . -l 3000",
+    "build": "npm run css -- --minify && node scripts/build.mjs",
+    "fonts": "node scripts/fonts.mjs"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

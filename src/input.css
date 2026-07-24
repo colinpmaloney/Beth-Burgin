@@ -1,0 +1,141 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+/* Classes toggled from JS live outside the HTML, so point Tailwind at both. */
+@source "../index.html";
+@source "../404.html";
+@source "../assets/js";
+
+@theme {
+  /* Warm, grounded palette — sand, clay, moss */
+  --color-bone: #faf7f2;
+  --color-sand: #f1e9dd;
+  --color-sand-deep: #e3d6c4;
+  --color-clay: #bd6f4c;
+  --color-clay-deep: #9d5636;
+  --color-moss: #47544a;
+  --color-moss-deep: #2c362f;
+  --color-ink: #221f1c;
+  --color-muted: #6d645b;
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --shadow-lift: 0 1px 2px rgb(34 31 28 / 0.04), 0 12px 32px -12px rgb(34 31 28 / 0.14);
+  --shadow-soft: 0 1px 2px rgb(34 31 28 / 0.04), 0 4px 14px -8px rgb(34 31 28 / 0.16);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    background-color: var(--color-bone);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Sticky header offset for in-page anchors */
+  section[id] {
+    scroll-margin-top: 5.5rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-clay);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-sand-deep);
+    color: var(--color-ink);
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 76rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= 64rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* Small caps-style eyebrow label */
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-clay-deep);
+}
+
+/* Subtle grain so the flat warm background doesn't read as plastic */
+@utility grain {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+  }
+}
+
+/* Reveal-on-scroll: opt-in, and inert when JS is off or motion is reduced */
+@layer components {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* FAQ disclosure marker */
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(45deg);
+  }
+}
