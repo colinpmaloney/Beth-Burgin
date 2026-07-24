@@ -15,7 +15,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
 
 // Everything the browser is allowed to see. Anything not listed stays out.
-const entries = ["index.html", "assets", "robots.txt", "sitemap.xml", "404.html"];
+const entries = ["index.html", "assets", "robots.txt", "sitemap.xml", "llms.txt", "404.html"];
 
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
