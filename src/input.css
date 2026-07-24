@@ -130,6 +130,106 @@
     }
   }
 
+  /* ---------------------------------------------------------------- *
+   * Testimonial carousel
+   *
+   * Without JS this is just a stack of every review, which reads fine.
+   * site.js adds the positioning; slide transforms are set inline from there
+   * because they depend on measured widths.
+   * ---------------------------------------------------------------- */
+  .carousel-track {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .js .carousel-track {
+    display: block;
+    position: relative;
+    /* Holds the space until JS measures the tallest card, so nothing jumps. */
+    min-height: 22rem;
+    /* Horizontal drags move the carousel; vertical ones still scroll the page. */
+    touch-action: pan-y;
+  }
+
+  .js .carousel-slide {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Narrow enough that the neighbouring cards still peek in on a phone. */
+    width: 84%;
+    transition:
+      transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.5s ease,
+      filter 0.5s ease;
+    will-change: transform, opacity;
+  }
+
+  @media (width >= 40rem) {
+    .js .carousel-slide {
+      width: 74%;
+    }
+  }
+
+  @media (width >= 64rem) {
+    .js .carousel-slide {
+      width: 58%;
+    }
+  }
+
+  @media (width >= 80rem) {
+    .js .carousel-slide {
+      width: 52%;
+    }
+  }
+
+  /* The off-centre cards are targets, not just decoration. */
+  .js .carousel-slide[data-position="side"] {
+    cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .carousel-slide {
+      transition: none;
+    }
+  }
+
+  /* The dot you see is small; the button you tap is not. Keeps the indicator
+     discreet while still meeting the 24px minimum target size. */
+  .carousel-dot {
+    display: grid;
+    place-items: center;
+    height: 2rem;
+    width: 1.5rem;
+    background: none;
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .carousel-dot::before {
+    content: "";
+    display: block;
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-sand-deep);
+    transition:
+      width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.4s ease;
+  }
+
+  .carousel-dot:hover::before {
+    background: var(--color-muted);
+  }
+
+  .carousel-dot[aria-current="true"] {
+    width: 2.25rem;
+  }
+
+  .carousel-dot[aria-current="true"]::before {
+    width: 1.75rem;
+    background: var(--color-clay);
+  }
+
   /* FAQ disclosure marker */
   .faq-item summary::-webkit-details-marker {
     display: none;

@@ -247,6 +247,201 @@
     });
   })();
 
+  /* ------------------------------------------------------------------ *
+   * 5. Testimonial carousel
+   * ------------------------------------------------------------------ */
+  (function testimonials() {
+    const root = document.querySelector("[data-carousel]");
+    if (!root) return;
+
+    const track = root.querySelector("[data-carousel-track]");
+    const slides = Array.prototype.slice.call(root.querySelectorAll("[data-carousel-slide]"));
+    if (!track || slides.length < 2) return;
+
+    const dotsWrap = root.querySelector("[data-carousel-dots]");
+    const status = root.querySelector("[data-carousel-status]");
+    const toggle = root.querySelector("[data-carousel-toggle]");
+    const toggleLabel = root.querySelector("[data-carousel-toggle-label]");
+    const iconPause = root.querySelector("[data-carousel-icon-pause]");
+    const iconPlay = root.querySelector("[data-carousel-icon-play]");
+
+    const count = slides.length;
+    const half = Math.floor(count / 2);
+    const DELAY = 7000;
+    const SWIPE = 40;
+
+    let active = 0;
+    let timer = null;
+    let hovering = false;
+    // Auto-rotation is motion, so it starts off for anyone who asked for less.
+    let wanted = !prefersReducedMotion;
+    let dragFrom = null;
+    let swiped = false;
+
+    const dots = slides.map(function (_, i) {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "carousel-dot";
+      dot.setAttribute("aria-label", "Show review " + (i + 1) + " of " + count);
+      dot.addEventListener("click", function () {
+        show(i, true);
+      });
+      if (dotsWrap) dotsWrap.appendChild(dot);
+      return dot;
+    });
+
+    // Shortest signed distance from the active slide, so the row wraps around
+    // instead of running out at either end.
+    function distance(i) {
+      let d = i - active;
+      if (d > half) d -= count;
+      if (d < -half) d += count;
+      return d;
+    }
+
+    function render() {
+      const step = slides[0].offsetWidth * 0.72;
+
+      let tallest = 0;
+      slides.forEach(function (slide) {
+        tallest = Math.max(tallest, slide.offsetHeight);
+      });
+      track.style.height = tallest + "px";
+
+      slides.forEach(function (slide, i) {
+        const d = distance(i);
+        const away = Math.abs(d);
+
+        // A card wrapping from one end of the row to the other would otherwise
+        // animate across the whole section. It's invisible at both ends, so
+        // move it with the transition switched off.
+        const was = slide.dataset.d;
+        const jumped = was !== undefined && Math.abs(d - Number(was)) > 1;
+        if (jumped) slide.style.transition = "none";
+
+        slide.style.transform =
+          "translate(calc(-50% + " + d * step + "px), -50%) scale(" + (d === 0 ? 1 : 0.86) + ")";
+        slide.style.opacity = away === 0 ? "1" : away === 1 ? "0.4" : "0";
+        slide.style.filter = d === 0 ? "none" : "blur(3px)";
+        slide.style.zIndex = String(10 - away);
+        slide.style.boxShadow = d === 0 ? "var(--shadow-lift)" : "var(--shadow-soft)";
+        slide.style.pointerEvents = away <= 1 ? "auto" : "none";
+        slide.setAttribute("aria-hidden", d === 0 ? "false" : "true");
+        slide.dataset.position = d === 0 ? "active" : "side";
+
+        if (jumped) {
+          void slide.offsetWidth;
+          slide.style.transition = "";
+        }
+        slide.dataset.d = String(d);
+      });
+
+      dots.forEach(function (dot, i) {
+        if (i === active) dot.setAttribute("aria-current", "true");
+        else dot.removeAttribute("aria-current");
+      });
+
+      if (status) status.textContent = "Review " + (active + 1) + " of " + count;
+    }
+
+    function show(index, fromUser) {
+      active = ((index % count) + count) % count;
+      render();
+      if (fromUser) schedule();
+    }
+
+    function schedule() {
+      window.clearInterval(timer);
+      timer = null;
+      if (!wanted || hovering || document.hidden) return;
+      timer = window.setInterval(function () {
+        show(active + 1);
+      }, DELAY);
+    }
+
+    function syncToggle() {
+      if (iconPause) iconPause.hidden = !wanted;
+      if (iconPlay) iconPlay.hidden = wanted;
+      if (toggleLabel) {
+        toggleLabel.textContent = wanted
+          ? "Pause automatic rotation"
+          : "Resume automatic rotation";
+      }
+      // Announcing every automatic change would be constant chatter, so the
+      // live region only speaks once the visitor is the one driving.
+      if (status) status.setAttribute("aria-live", wanted ? "off" : "polite");
+    }
+
+    const prev = root.querySelector("[data-carousel-prev]");
+    const next = root.querySelector("[data-carousel-next]");
+    if (prev) prev.addEventListener("click", function () { show(active - 1, true); });
+    if (next) next.addEventListener("click", function () { show(active + 1, true); });
+
+    if (toggle) {
+      toggle.addEventListener("click", function () {
+        wanted = !wanted;
+        syncToggle();
+        schedule();
+      });
+    }
+
+    // Clicking a card on either side brings it to the middle.
+    slides.forEach(function (slide, i) {
+      slide.addEventListener("click", function () {
+        if (swiped || slide.dataset.position !== "side") return;
+        show(i, true);
+      });
+    });
+
+    root.addEventListener("mouseenter", function () { hovering = true; schedule(); });
+    root.addEventListener("mouseleave", function () { hovering = false; schedule(); });
+    root.addEventListener("focusin", function () { hovering = true; schedule(); });
+    root.addEventListener("focusout", function () {
+      if (!root.contains(document.activeElement)) {
+        hovering = false;
+        schedule();
+      }
+    });
+
+    root.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowLeft") { event.preventDefault(); show(active - 1, true); }
+      else if (event.key === "ArrowRight") { event.preventDefault(); show(active + 1, true); }
+    });
+
+    // Drag or swipe across the cards.
+    track.addEventListener("pointerdown", function (event) {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      dragFrom = event.clientX;
+      swiped = false;
+    });
+    track.addEventListener("pointerup", function (event) {
+      if (dragFrom === null) return;
+      const moved = event.clientX - dragFrom;
+      dragFrom = null;
+      if (Math.abs(moved) < SWIPE) return;
+      swiped = true;
+      show(active + (moved < 0 ? 1 : -1), true);
+      // Let the click that follows the drag pass by before re-arming.
+      window.setTimeout(function () { swiped = false; }, 0);
+    });
+    track.addEventListener("pointercancel", function () { dragFrom = null; });
+
+    document.addEventListener("visibilitychange", schedule);
+
+    let resizeTimer = null;
+    window.addEventListener("resize", function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(render, 150);
+    });
+
+    // Card heights depend on the webfont, so measure again once it lands.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+
+    syncToggle();
+    render();
+    schedule();
+  })();
+
   (function footerYear() {
     const el = document.querySelector("[data-year]");
     if (el) el.textContent = String(new Date().getFullYear());
