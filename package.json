@@ -10,7 +10,8 @@
     "dev": "npm run css -- --watch",
     "serve": "npx --yes serve@14 . -l 3000",
     "build": "npm run css -- --minify && node scripts/build.mjs",
-    "fonts": "node scripts/fonts.mjs"
+    "fonts": "node scripts/fonts.mjs",
+    "preview": "node scripts/preview.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
