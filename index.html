@@ -312,21 +312,22 @@
               <figure class="relative mx-auto max-w-md">
                 <div class="overflow-hidden rounded-[2rem] bg-sand shadow-lift">
                   <!--
-                    PHOTO SLOT. Drop a portrait at assets/img/beth-portrait.jpg (portrait crop, ~1000x1250).
-                    Until then the styled placeholder below shows instead.
+                    PHOTO SLOT. Drop a square headshot at assets/img/beth-portrait.jpg (about
+                    1200x1200). Square because the photo we have is a tight square crop; a taller
+                    frame would cut the sides off. Until the file exists the placeholder shows.
                   -->
                   <img
                     src="/assets/img/beth-portrait.jpg"
-                    alt="Beth Burgin, Certified Advanced Rolfer, in her Wilmington studio"
-                    width="1000"
-                    height="1250"
-                    class="aspect-[4/5] w-full object-cover"
+                    alt="Beth Burgin, Certified Advanced Rolfer"
+                    width="1200"
+                    height="1200"
+                    class="aspect-square w-full object-cover object-top"
                     onerror="this.remove(); document.getElementById('portrait-fallback').hidden = false;"
                   />
                   <div
                     id="portrait-fallback"
                     hidden
-                    class="flex aspect-[4/5] w-full flex-col items-center justify-center gap-4 bg-gradient-to-br from-sand via-sand-deep to-moss/30 p-8 text-center"
+                    class="flex aspect-square w-full flex-col items-center justify-center gap-4 bg-gradient-to-br from-sand via-sand-deep to-moss/30 p-8 text-center"
                   >
                     <svg viewBox="0 0 24 24" class="size-12 text-moss/60" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
                       <path d="M12 2v20" />
@@ -630,11 +631,6 @@
       </section>
 
       <!-- ================= REVIEWS ================= -->
-      <!--
-        TODO (Beth/Colin): these two quotes were reconstructed from public review snippets.
-        Please paste the exact review text + first name/initial before this goes to a custom domain,
-        or swap in testimonials Beth has permission to use.
-      -->
       <section id="reviews" class="grain relative overflow-hidden bg-sand/40 py-24 sm:py-32">
         <div class="container-page">
           <div class="mx-auto max-w-3xl text-center">
@@ -642,32 +638,111 @@
             <h2 class="reveal mt-4 font-display text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.08] font-normal tracking-[-0.02em] text-balance text-ink">
               What clients say
             </h2>
+            <p class="reveal mt-6 text-lg leading-relaxed text-muted text-pretty">
+              People drive in from Hampstead and Charlotte for this work. Here is what a few of
+              them had to say.
+            </p>
           </div>
 
-          <div class="mt-14 grid gap-5 md:grid-cols-2">
-            <figure class="reveal flex flex-col rounded-3xl border border-sand-deep bg-bone p-8 sm:p-10">
+          <!-- Lead review. It came with its own headline, so it gets the room. -->
+          <figure class="reveal mt-14 rounded-3xl border border-sand-deep bg-bone p-8 sm:p-10 lg:p-14">
+            <div class="grid gap-8 lg:grid-cols-12 lg:gap-14">
+              <div class="lg:col-span-5">
+                <svg viewBox="0 0 24 24" class="size-9 text-clay" fill="currentColor" aria-hidden="true">
+                  <path d="M9.5 5C6.5 6.6 5 9.2 5 12.8V19h6.4v-6.5H8.3c0-2.3.9-3.9 2.7-4.9L9.5 5Zm9 0c-3 1.6-4.5 4.2-4.5 7.8V19h6.4v-6.5h-3.1c0-2.3.9-3.9 2.7-4.9L18.5 5Z" />
+                </svg>
+                <p class="mt-6 font-display text-2xl leading-snug text-balance text-ink sm:text-3xl">
+                  Transformational Experience with a Skilled, Compassionate Rolfer
+                </p>
+                <figcaption class="mt-7 flex items-center gap-3 text-sm">
+                  <span class="h-px w-8 bg-clay" aria-hidden="true"></span>
+                  <span><span class="font-medium text-ink">Tanya B</span><span class="text-muted">, Wilmington</span></span>
+                </figcaption>
+              </div>
+
+              <blockquote class="text-lg leading-relaxed text-muted text-pretty lg:col-span-7 lg:text-xl">
+                <p>
+                  I was referred by my massage therapist for shoulder pain. From the first session,
+                  I knew I was in good hands. Beth took the time to listen and assess my posture and
+                  movement patterns. Her touch was intuitive yet precise.
+                </p>
+                <p class="mt-4">
+                  What impressed me most was not just the physical transformation, but the emotional
+                  release and increased self-awareness that came with it. Beth held a grounded, safe
+                  space throughout, and brought both skill and sensitivity to each session. If you're
+                  ready to work with your body at a deeper level, I wholeheartedly recommend Beth.
+                </p>
+              </blockquote>
+            </div>
+          </figure>
+
+          <div class="mt-5 grid gap-5 sm:grid-cols-2">
+            <figure class="reveal flex flex-col rounded-3xl border border-sand-deep bg-bone p-8 sm:p-9">
               <svg viewBox="0 0 24 24" class="size-8 text-sand-deep" fill="currentColor" aria-hidden="true">
                 <path d="M9.5 5C6.5 6.6 5 9.2 5 12.8V19h6.4v-6.5H8.3c0-2.3.9-3.9 2.7-4.9L9.5 5Zm9 0c-3 1.6-4.5 4.2-4.5 7.8V19h6.4v-6.5h-3.1c0-2.3.9-3.9 2.7-4.9L18.5 5Z" />
               </svg>
-              <blockquote class="mt-6 flex-1 font-display text-xl leading-relaxed text-ink text-pretty sm:text-2xl">
-                Beth didn't just give me relief from constant muscle aches. She found and resolved what was actually causing them. Her expertise, care, and attention to detail made all the difference.
+              <blockquote class="mt-6 flex-1 font-display text-lg leading-relaxed text-ink text-pretty sm:text-xl">
+                Beth Burgin is truly amazing! I had been dealing with constant muscle aches for a
+                long time, and Beth not only provided incredible relief but also identified and
+                resolved the underlying issues causing it. Her expertise, care, and attention to
+                detail made all the difference. I feel so much better thanks to her, and I can't
+                recommend her enough to anyone looking for real, lasting pain relief. Thank you,
+                Beth!
               </blockquote>
-              <figcaption class="mt-8 flex items-center gap-3 text-sm text-muted">
+              <figcaption class="mt-8 flex items-center gap-3 text-sm">
                 <span class="h-px w-8 bg-sand-deep" aria-hidden="true"></span>
-                Client review
+                <span><span class="font-medium text-ink">JC</span><span class="text-muted">, Wilmington</span></span>
               </figcaption>
             </figure>
 
-            <figure class="reveal flex flex-col rounded-3xl border border-sand-deep bg-bone p-8 sm:p-10">
+            <figure class="reveal flex flex-col rounded-3xl border border-sand-deep bg-bone p-8 sm:p-9">
               <svg viewBox="0 0 24 24" class="size-8 text-sand-deep" fill="currentColor" aria-hidden="true">
                 <path d="M9.5 5C6.5 6.6 5 9.2 5 12.8V19h6.4v-6.5H8.3c0-2.3.9-3.9 2.7-4.9L9.5 5Zm9 0c-3 1.6-4.5 4.2-4.5 7.8V19h6.4v-6.5h-3.1c0-2.3.9-3.9 2.7-4.9L18.5 5Z" />
               </svg>
-              <blockquote class="mt-6 flex-1 font-display text-xl leading-relaxed text-ink text-pretty sm:text-2xl">
-                Unbelievable results from the ten series. An overall body alignment experience that really is beneficial to misalignment, posture, and injury situations.
+              <blockquote class="mt-6 flex-1 font-display text-lg leading-relaxed text-ink text-pretty sm:text-xl">
+                We all have aches, misalignment, injuries... I have used a Rolfer in the past with
+                success but never tried the ten series. Unbelievable results! Simplistically an
+                overall body alignment experience that really is beneficial to misalignment /
+                posture / injury situations. Beth is knowledgeable, professional and truly listens
+                to her clients and the results are amazing!
               </blockquote>
-              <figcaption class="mt-8 flex items-center gap-3 text-sm text-muted">
+              <figcaption class="mt-8 flex items-center gap-3 text-sm">
                 <span class="h-px w-8 bg-sand-deep" aria-hidden="true"></span>
-                Client review
+                <span><span class="font-medium text-ink">M Harper</span><span class="text-muted">, Wilmington</span></span>
+              </figcaption>
+            </figure>
+
+            <figure class="reveal flex flex-col rounded-3xl border border-sand-deep bg-bone p-8 sm:p-9">
+              <svg viewBox="0 0 24 24" class="size-8 text-sand-deep" fill="currentColor" aria-hidden="true">
+                <path d="M9.5 5C6.5 6.6 5 9.2 5 12.8V19h6.4v-6.5H8.3c0-2.3.9-3.9 2.7-4.9L9.5 5Zm9 0c-3 1.6-4.5 4.2-4.5 7.8V19h6.4v-6.5h-3.1c0-2.3.9-3.9 2.7-4.9L18.5 5Z" />
+              </svg>
+              <blockquote class="mt-6 flex-1 font-display text-lg leading-relaxed text-ink text-pretty sm:text-xl">
+                Beth is a great listener and has excellent assessment and hands-on skills. She
+                recently helped me work through some challenged areas in my body that presented as
+                pain in my shoulders and neck. She also gave me suggestions about specific gentle
+                movements I can do to strengthen and stabilize my areas of concern. Such a relief;
+                thank you Beth!
+              </blockquote>
+              <figcaption class="mt-8 flex items-center gap-3 text-sm">
+                <span class="h-px w-8 bg-sand-deep" aria-hidden="true"></span>
+                <span><span class="font-medium text-ink">Susan</span><span class="text-muted">, Hampstead</span></span>
+              </figcaption>
+            </figure>
+
+            <figure class="reveal flex flex-col rounded-3xl border border-sand-deep bg-bone p-8 sm:p-9">
+              <svg viewBox="0 0 24 24" class="size-8 text-sand-deep" fill="currentColor" aria-hidden="true">
+                <path d="M9.5 5C6.5 6.6 5 9.2 5 12.8V19h6.4v-6.5H8.3c0-2.3.9-3.9 2.7-4.9L9.5 5Zm9 0c-3 1.6-4.5 4.2-4.5 7.8V19h6.4v-6.5h-3.1c0-2.3.9-3.9 2.7-4.9L18.5 5Z" />
+              </svg>
+              <blockquote class="mt-6 flex-1 font-display text-lg leading-relaxed text-ink text-pretty sm:text-xl">
+                In your quest to heal yourself, start here! Beth is incredible and knows how to cure
+                most bodily ailments without drugs and invasive surgeries. The education of how your
+                body works in synchronicity will help you on your journey to better health and pain
+                management. She helps your body heal itself, like it has from birth. Trust me, start
+                here.
+              </blockquote>
+              <figcaption class="mt-8 flex items-center gap-3 text-sm">
+                <span class="h-px w-8 bg-sand-deep" aria-hidden="true"></span>
+                <span><span class="font-medium text-ink">Tim D</span><span class="text-muted">, Charlotte</span></span>
               </figcaption>
             </figure>
           </div>
