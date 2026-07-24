@@ -49,6 +49,9 @@ body = body.replace(/<iframe[\s\S]*?<\/iframe>/g, "");
 // The script is inlined below, so drop the tag that points at the file.
 body = body.replace(/<script src="\/assets\/js\/site\.js"[^>]*><\/script>/, "");
 
+// Vercel serves the analytics script; anywhere else it is a guaranteed 404.
+body = body.replace(/[ \t]*<script defer src="\/_vercel\/[^"]*"><\/script>\n/, "");
+
 const out = `<title>${title}</title>
 <style>
 /* The site commits to one warm, light palette. Pin the scheme so a dark host
