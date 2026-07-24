@@ -155,7 +155,7 @@
     // 95% rather than something more see-through: the nav is text-muted, and
     // when a dark section slides under a thinner background the effective
     // contrast drops under 4.5:1.
-    const scrolledClasses = ["bg-bone/95", "backdrop-blur-md", "shadow-soft"];
+    const scrolledClasses = ["bg-bone/95", "backdrop-blur-md", "shadow-header"];
 
     function update() {
       header.classList.toggle(scrolledClasses[0], window.scrollY > 16);
@@ -364,7 +364,7 @@
         slide.style.opacity = away === 0 ? "1" : away === 1 ? "0.4" : "0";
         slide.style.filter = d === 0 ? "none" : "blur(3px)";
         slide.style.zIndex = String(10 - away);
-        slide.style.boxShadow = d === 0 ? "var(--shadow-lift)" : "var(--shadow-soft)";
+        slide.style.boxShadow = d === 0 ? "var(--shadow-e3)" : "var(--shadow-e1)";
         slide.style.pointerEvents = away <= 1 ? "auto" : "none";
         slide.setAttribute("aria-hidden", d === 0 ? "false" : "true");
         slide.dataset.position = d === 0 ? "active" : "side";

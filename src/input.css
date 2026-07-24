@@ -21,8 +21,46 @@
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  --shadow-lift: 0 1px 2px rgb(34 31 28 / 0.04), 0 12px 32px -12px rgb(34 31 28 / 0.14);
-  --shadow-soft: 0 1px 2px rgb(34 31 28 / 0.04), 0 4px 14px -8px rgb(34 31 28 / 0.16);
+  /* Elevation scale.
+   *
+   * One light source, above and slightly in front. Every raised surface gets a
+   * thin white inset along its top edge, where that light would catch, and its
+   * shadow falls below and spreads as it rises. Higher elements cast further
+   * and softer, which is what makes the order readable rather than decorative.
+   *
+   *   e1  resting cards
+   *   e2  interactive things, and cards under the cursor
+   *   e3  the focal element of a section
+   *   e4  the one thing on top of everything else
+   *
+   * The -dark variants are the same idea on ink and moss surfaces, where the
+   * top edge takes a faint rim of light rather than a white line. */
+  --shadow-e1:
+    inset 0 1px 0 rgb(255 255 255 / 0.55), 0 1px 2px rgb(34 31 28 / 0.05),
+    0 2px 6px -2px rgb(34 31 28 / 0.07);
+  --shadow-e2:
+    inset 0 1px 0 rgb(255 255 255 / 0.7), 0 1px 2px rgb(34 31 28 / 0.05),
+    0 6px 14px -4px rgb(34 31 28 / 0.09), 0 12px 26px -12px rgb(34 31 28 / 0.1);
+  --shadow-e3:
+    inset 0 1px 0 rgb(255 255 255 / 0.8), 0 1px 2px rgb(34 31 28 / 0.06),
+    0 10px 22px -6px rgb(34 31 28 / 0.11), 0 24px 46px -18px rgb(34 31 28 / 0.13);
+  --shadow-e4:
+    inset 0 1px 0 rgb(255 255 255 / 0.9), 0 2px 4px rgb(34 31 28 / 0.06),
+    0 16px 32px -10px rgb(34 31 28 / 0.13), 0 40px 70px -28px rgb(34 31 28 / 0.16);
+
+  --shadow-e2-dark:
+    inset 0 1px 0 rgb(255 255 255 / 0.12), 0 1px 2px rgb(34 31 28 / 0.22),
+    0 8px 18px -6px rgb(34 31 28 / 0.26);
+  --shadow-e3-dark:
+    inset 0 1px 0 rgb(255 255 255 / 0.16), 0 2px 4px rgb(34 31 28 / 0.22),
+    0 14px 28px -8px rgb(34 31 28 / 0.3), 0 32px 56px -24px rgb(34 31 28 / 0.32);
+
+  /* Pressed: the surface drops to the page, so the cast shadow collapses and
+     the highlight moves to the inside. */
+  --shadow-press: inset 0 2px 4px rgb(34 31 28 / 0.22), 0 1px 1px rgb(34 31 28 / 0.06);
+
+  /* The header hangs over the page from the top edge, so it only casts down. */
+  --shadow-header: 0 1px 0 rgb(34 31 28 / 0.05), 0 6px 20px -8px rgb(34 31 28 / 0.14);
 }
 
 @layer base {
@@ -195,6 +233,14 @@
     .js .carousel-track,
     .js .carousel-slide {
       transition: none;
+    }
+  }
+
+  /* The hover and press lifts are motion. Keep the depth, drop the movement. */
+  @media (prefers-reduced-motion: reduce) {
+    .hover\:-translate-y-0\.5:hover,
+    .active\:translate-y-px:active {
+      transform: none;
     }
   }
 
