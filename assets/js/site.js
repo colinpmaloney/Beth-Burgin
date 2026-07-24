@@ -155,7 +155,7 @@
     // 95% rather than something more see-through: the nav is text-muted, and
     // when a dark section slides under a thinner background the effective
     // contrast drops under 4.5:1.
-    const scrolledClasses = ["bg-bone/95", "backdrop-blur-md", "shadow-header"];
+    const scrolledClasses = ["bg-surface/95", "backdrop-blur-md", "shadow-header"];
 
     function update() {
       header.classList.toggle(scrolledClasses[0], window.scrollY > 16);

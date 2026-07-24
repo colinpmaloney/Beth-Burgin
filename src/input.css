@@ -7,16 +7,43 @@
 @source "../assets/js";
 
 @theme {
-  /* Warm, grounded palette: sand, clay, moss */
-  --color-bone: #faf7f2;
-  --color-sand: #f1e9dd;
-  --color-sand-deep: #e3d6c4;
-  --color-clay: #bd6f4c;
-  --color-clay-deep: #9d5636;
-  --color-moss: #47544a;
-  --color-moss-deep: #2c362f;
-  --color-ink: #221f1c;
-  --color-muted: #6d645b;
+  /* ------------------------------------------------------------------ *
+   * Palette
+   *
+   * Every colour on the site resolves to one of these. The names say what a
+   * colour is FOR, not what hue it happens to be, so re-skinning means editing
+   * this block and nothing else -- no find-and-replace through the markup.
+   *
+   *   canvas / surface / sunk   light grounds, lightest to least light
+   *   line / line-strong        hairlines and borders
+   *   ink / muted               text on light
+   *   accent                    the single emphasis channel
+   *   inverse*                  dark panels, and the three text weights on them
+   *
+   * Current scheme: white, grey, black. High contrast on purpose, and it suits
+   * a black-and-white portrait better than a tinted palette would.
+   * ------------------------------------------------------------------ */
+  --color-canvas: #fafafa;
+  --color-surface: #ffffff;
+  --color-sunk: #f2f2f4;
+  --color-line: #e4e4e8;
+  --color-line-strong: #cfcfd6;
+  --color-ink: #18181b;
+  --color-muted: #62626b;
+  --color-accent: #000000;
+  --color-accent-soft: #303036;
+  --color-inverse: #141416;
+  --color-inverse-soft: #2b2b31;
+  --color-inverse-ink: #fafafa;
+  --color-inverse-body: #d7d7dc;
+  --color-inverse-muted: #a1a1a9;
+
+  /* Previous scheme, kept so it is one paste away if the monochrome is too
+     stark. Warm sand and clay:
+       canvas #faf7f2  surface #faf7f2  sunk #f1e9dd  line #e3d6c4
+       ink #221f1c  muted #6d645b  accent #bd6f4c  accent-soft #9d5636
+       inverse #2c362f  inverse-soft #47544a
+       inverse-ink #faf7f2  inverse-body #f1e9dd  inverse-muted #e3d6c4 */
 
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -42,43 +69,43 @@
    * extra layer up from transparent while the others move, which reads as a
    * step rather than a lift. Matching the counts is what makes hover smooth.
    *
-   * The -dark variants are the same idea on ink and moss surfaces, where the
-   * top edge takes a faint rim of light rather than a white line. */
+   * The -dark variants are the same idea on the dark panels, where the top edge
+   * takes a faint rim of light rather than a white line. */
   --shadow-e1:
-    inset 0 1px 0 rgb(255 255 255 / 0.55), 0 1px 2px rgb(34 31 28 / 0.05),
-    0 2px 6px -2px rgb(34 31 28 / 0.07), 0 4px 12px -8px rgb(34 31 28 / 0.06);
+    inset 0 1px 0 rgb(255 255 255 / 0.55), 0 1px 2px rgb(9 9 11 / 0.05),
+    0 2px 6px -2px rgb(9 9 11 / 0.07), 0 4px 12px -8px rgb(9 9 11 / 0.06);
   --shadow-e2:
-    inset 0 1px 0 rgb(255 255 255 / 0.7), 0 1px 2px rgb(34 31 28 / 0.05),
-    0 6px 14px -4px rgb(34 31 28 / 0.09), 0 12px 26px -12px rgb(34 31 28 / 0.1);
+    inset 0 1px 0 rgb(255 255 255 / 0.7), 0 1px 2px rgb(9 9 11 / 0.05),
+    0 6px 14px -4px rgb(9 9 11 / 0.09), 0 12px 26px -12px rgb(9 9 11 / 0.1);
   --shadow-e3:
-    inset 0 1px 0 rgb(255 255 255 / 0.8), 0 1px 2px rgb(34 31 28 / 0.06),
-    0 10px 22px -6px rgb(34 31 28 / 0.11), 0 24px 46px -18px rgb(34 31 28 / 0.13);
+    inset 0 1px 0 rgb(255 255 255 / 0.8), 0 1px 2px rgb(9 9 11 / 0.06),
+    0 10px 22px -6px rgb(9 9 11 / 0.11), 0 24px 46px -18px rgb(9 9 11 / 0.13);
   --shadow-e4:
-    inset 0 1px 0 rgb(255 255 255 / 0.9), 0 2px 4px rgb(34 31 28 / 0.06),
-    0 16px 32px -10px rgb(34 31 28 / 0.13), 0 40px 70px -28px rgb(34 31 28 / 0.16);
+    inset 0 1px 0 rgb(255 255 255 / 0.9), 0 2px 4px rgb(9 9 11 / 0.06),
+    0 16px 32px -10px rgb(9 9 11 / 0.13), 0 40px 70px -28px rgb(9 9 11 / 0.16);
 
   --shadow-e2-dark:
-    inset 0 1px 0 rgb(255 255 255 / 0.12), 0 1px 2px rgb(34 31 28 / 0.22),
-    0 8px 18px -6px rgb(34 31 28 / 0.26), 0 16px 30px -16px rgb(34 31 28 / 0.24);
+    inset 0 1px 0 rgb(255 255 255 / 0.12), 0 1px 2px rgb(9 9 11 / 0.22),
+    0 8px 18px -6px rgb(9 9 11 / 0.26), 0 16px 30px -16px rgb(9 9 11 / 0.24);
   --shadow-e3-dark:
-    inset 0 1px 0 rgb(255 255 255 / 0.16), 0 2px 4px rgb(34 31 28 / 0.22),
-    0 14px 28px -8px rgb(34 31 28 / 0.3), 0 32px 56px -24px rgb(34 31 28 / 0.32);
+    inset 0 1px 0 rgb(255 255 255 / 0.16), 0 2px 4px rgb(9 9 11 / 0.22),
+    0 14px 28px -8px rgb(9 9 11 / 0.3), 0 32px 56px -24px rgb(9 9 11 / 0.32);
   --shadow-e4-dark:
-    inset 0 1px 0 rgb(255 255 255 / 0.2), 0 2px 6px rgb(34 31 28 / 0.24),
-    0 20px 38px -10px rgb(34 31 28 / 0.34), 0 44px 76px -30px rgb(34 31 28 / 0.36);
+    inset 0 1px 0 rgb(255 255 255 / 0.2), 0 2px 6px rgb(9 9 11 / 0.24),
+    0 20px 38px -10px rgb(9 9 11 / 0.34), 0 44px 76px -30px rgb(9 9 11 / 0.36);
 
   /* Pressed: the surface drops to the page, so the highlight moves inside and
      the two outer layers collapse to nothing. Kept at four layers so it can be
      animated to and from the others. */
   --shadow-press:
-    inset 0 2px 4px rgb(34 31 28 / 0.22), 0 1px 1px rgb(34 31 28 / 0.06),
-    0 0 0 -4px rgb(34 31 28 / 0), 0 0 0 -16px rgb(34 31 28 / 0);
+    inset 0 2px 4px rgb(9 9 11 / 0.22), 0 1px 1px rgb(9 9 11 / 0.06),
+    0 0 0 -4px rgb(9 9 11 / 0), 0 0 0 -16px rgb(9 9 11 / 0);
 
   /* The header hangs over the page from the top edge, so it only casts down
      and takes no highlight. */
   --shadow-header:
-    0 1px 0 rgb(34 31 28 / 0.05), 0 2px 4px -1px rgb(34 31 28 / 0.05),
-    0 6px 20px -8px rgb(34 31 28 / 0.14), 0 12px 28px -20px rgb(34 31 28 / 0.1);
+    0 1px 0 rgb(9 9 11 / 0.05), 0 2px 4px -1px rgb(9 9 11 / 0.05),
+    0 6px 20px -8px rgb(9 9 11 / 0.14), 0 12px 28px -20px rgb(9 9 11 / 0.1);
 
   /* Shared curve for anything that rises or settles. */
   --ease-lift: cubic-bezier(0.22, 1, 0.36, 1);
@@ -104,7 +131,7 @@
   }
 
   body {
-    background-color: var(--color-bone);
+    background-color: var(--color-canvas);
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -117,14 +144,20 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-clay);
+    outline: 2px solid var(--color-accent);
     outline-offset: 3px;
     border-radius: 2px;
   }
 
+  /* A black ring is invisible against the dark panels, so they invert it. */
+  .bg-inverse :focus-visible,
+  .bg-inverse-soft :focus-visible {
+    outline-color: var(--color-inverse-ink);
+  }
+
   ::selection {
-    background: var(--color-sand-deep);
-    color: var(--color-ink);
+    background: var(--color-ink);
+    color: var(--color-inverse-ink);
   }
 }
 
@@ -143,16 +176,19 @@
   }
 }
 
-/* Small caps-style eyebrow label */
+/* Small caps-style eyebrow label. Grey rather than accent: the tracking and
+   weight already mark it as a label, and a second near-black would compete with
+   the heading directly beneath it. */
 @utility eyebrow {
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-clay-deep);
+  color: var(--color-muted);
 }
 
-/* Subtle grain so the flat warm background doesn't read as plastic */
+/* Faint grain so the flat grounds don't read as plastic. Lighter than it was
+   on the tinted palette, since noise shows far more on near-white. */
 @utility grain {
   position: relative;
 
@@ -161,7 +197,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.4;
+    opacity: 0.22;
     mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
   }
@@ -358,7 +394,7 @@
     height: 0.5rem;
     width: 0.5rem;
     border-radius: 9999px;
-    background: var(--color-sand-deep);
+    background: var(--color-line-strong);
     transition:
       width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
       background-color 0.4s ease;
@@ -374,7 +410,7 @@
 
   .carousel-dot[aria-current="true"]::before {
     width: 1.75rem;
-    background: var(--color-clay);
+    background: var(--color-accent);
   }
 
   /* FAQ disclosure marker */

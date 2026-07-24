@@ -55,10 +55,10 @@ body = body.replace(/[ \t]*<script defer src="\/_vercel\/[^"]*"><\/script>\n/g, 
 
 const out = `<title>${title}</title>
 <style>
-/* The site commits to one warm, light palette. Pin the scheme so a dark host
+/* The site commits to one light palette. Pin the scheme so a dark host
    shell can't half-apply its own. */
 :root, :root[data-theme="dark"], :root[data-theme="light"] { color-scheme: light; }
-html, body { background: #faf7f2; }
+html, body { background: #fafafa; }
 
 ${css}
 </style>
