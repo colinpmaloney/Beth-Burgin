@@ -29,16 +29,22 @@ for (const entry of entries) {
 // The hero photo is optional. When it isn't in the repo, drop the <img> and
 // show the placeholder directly: leaving the tag in would 404 on every visit
 // and put a red line in the console, which reads as a broken site.
-const hasPortrait = existsSync(join(root, "assets", "img", "beth-portrait.jpg"));
-if (!hasPortrait) {
-  const page = join(dist, "index.html");
-  const html = (await readFile(page, "utf8"))
-    .replace(/[ \t]*<!-- portrait:start -->[\s\S]*?<!-- portrait:end -->\n/, "")
-    .replace(/(id="portrait-fallback")\s+hidden/, "$1");
+//
+// The filename is read out of the markup rather than hardcoded here, so
+// changing the src in index.html is all it takes to point at a different file.
+const page = join(dist, "index.html");
+let html = await readFile(page, "utf8");
+
+const block = html.match(/[ \t]*<!-- portrait:start -->[\s\S]*?<!-- portrait:end -->\n/);
+const src = block ? block[0].match(/src="([^"]+)"/) : null;
+const hasPortrait = !!src && existsSync(join(root, src[1].replace(/^\//, "")));
+
+if (block && !hasPortrait) {
+  html = html.replace(block[0], "").replace(/(id="portrait-fallback")\s+hidden/, "$1");
   await writeFile(page, html);
 }
 
 console.log(
   `Built dist/ (${entries.filter((e) => existsSync(join(root, e))).join(", ")})` +
-    (hasPortrait ? " with hero photo" : " without hero photo, showing the placeholder")
+    (hasPortrait ? ` with hero photo ${src[1]}` : " without a hero photo, showing the placeholder")
 );
