@@ -10,7 +10,9 @@
       content="Advanced Rolfing® Structural Integration in downtown Wilmington, NC. 25 years of hands-on work to ease chronic pain and help you move freely. $140 a session."
     />
     <link rel="canonical" href="https://www.bethburgin.com/" />
-    <meta name="theme-color" content="#ffffff" />
+    <!-- The hero is the top of the page, so this is the colour the browser chrome
+         sits against on a phone. White here put a bright bar over a dark hero. -->
+    <meta name="theme-color" content="#092a2f" />
 
     <!-- Open Graph / social sharing -->
     <meta property="og:type" content="website" />
@@ -50,6 +52,16 @@
       type="font/woff2"
       crossorigin
     />
+    <!-- The hero photograph is full-bleed and above the fold, so it is the largest
+         paint on the page. Preloaded rather than left to be discovered, which on a
+         cold connection is a second of flat teal.
+
+         The build rewrites this href alongside the <img>, and removes both if there
+         is no hero-bg.* file, so the two can't point at different things. -->
+    <!-- hero-preload:start -->
+    <link rel="preload" href="/assets/img/hero-bg.webp" as="image" fetchpriority="high" />
+    <!-- hero-preload:end -->
+
     <link rel="stylesheet" href="/assets/css/site.css" />
 
     <!-- Set before first paint so scroll-reveal never flashes un-animated content, and stays
@@ -222,17 +234,13 @@
     >
 
     <!-- ================= HEADER ================= -->
-    <header
-      id="site-header"
-      class="fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300"
-      data-header
-    >
+    <header id="site-header" class="site-header fixed inset-x-0 top-0 z-50" data-header>
       <div class="container-page">
         <div class="flex h-20 items-center justify-between gap-4">
           <!-- Wordmark -->
-          <a href="#top" class="group flex items-center gap-3" aria-label="Beth Burgin, home">
+          <a href="#top" class="flex items-center gap-3" aria-label="Beth Burgin, home">
             <span
-              class="flex size-10 shrink-0 items-center justify-center rounded-full bg-inverse text-inverse-ink transition-colors duration-300 group-hover:bg-accent"
+              class="header-mark flex size-10 shrink-0 items-center justify-center rounded-full"
               aria-hidden="true"
             >
               <!-- Abstract spine / alignment mark -->
@@ -244,9 +252,9 @@
               </svg>
             </span>
             <span class="leading-tight">
-              <span class="block font-display text-base font-medium tracking-tight whitespace-nowrap text-ink sm:text-lg">Beth Burgin</span>
+              <span class="header-name block font-display text-base font-medium tracking-tight whitespace-nowrap sm:text-lg">Beth Burgin</span>
               <span
-                class="hidden text-xs font-medium tracking-[0.16em] whitespace-nowrap text-muted uppercase min-[380px]:block"
+                class="header-kicker hidden text-xs font-medium tracking-[0.16em] whitespace-nowrap uppercase min-[380px]:block"
                 >Advanced Rolfer<sup class="text-[0.6em]">®</sup></span
               >
             </span>
@@ -258,42 +266,42 @@
               <li>
                 <a
                   href="#rolfing"
-                  class="rounded-full px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-ink aria-[current=true]:text-ink"
+                  class="header-link rounded-full px-4 py-2 text-sm font-medium"
                   >Rolfing</a
                 >
               </li>
               <li>
                 <a
                   href="#about"
-                  class="rounded-full px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-ink aria-[current=true]:text-ink"
+                  class="header-link rounded-full px-4 py-2 text-sm font-medium"
                   >About Beth</a
                 >
               </li>
               <li>
                 <a
                   href="#sessions"
-                  class="rounded-full px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-ink aria-[current=true]:text-ink"
+                  class="header-link rounded-full px-4 py-2 text-sm font-medium"
                   >Sessions</a
                 >
               </li>
               <li>
                 <a
                   href="#reviews"
-                  class="rounded-full px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-ink aria-[current=true]:text-ink"
+                  class="header-link rounded-full px-4 py-2 text-sm font-medium"
                   >Reviews</a
                 >
               </li>
               <li>
                 <a
                   href="#faq"
-                  class="rounded-full px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-ink aria-[current=true]:text-ink"
+                  class="header-link rounded-full px-4 py-2 text-sm font-medium"
                   >FAQ</a
                 >
               </li>
               <li>
                 <a
                   href="#visit"
-                  class="rounded-full px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-ink aria-[current=true]:text-ink"
+                  class="header-link rounded-full px-4 py-2 text-sm font-medium"
                   >Visit</a
                 >
               </li>
@@ -305,14 +313,14 @@
               href="https://app.acuityscheduling.com/schedule.php?owner=12694574"
               target="_blank"
               rel="noopener"
-              class="inline-flex rounded-full bg-ink px-4 py-2.5 text-sm font-medium text-inverse-ink shadow-e2-dark press hover:bg-accent hover:shadow-e3-dark active:shadow-press sm:px-5"
+              class="btn-cta inline-flex rounded-full px-4 py-2.5 text-sm font-medium shadow-e2-dark press hover:shadow-e3-dark active:shadow-press sm:px-5"
               ><span class="sm:hidden">Book</span><span class="hidden sm:inline">Book a session</span></a
             >
 
             <!-- Mobile menu button -->
             <button
               type="button"
-              class="inline-flex size-11 items-center justify-center rounded-full border border-line bg-surface/70 text-ink transition-colors hover:bg-sunk lg:hidden"
+              class="header-menu-btn inline-flex size-11 items-center justify-center rounded-full border lg:hidden"
               aria-controls="mobile-menu"
               aria-expanded="false"
               data-menu-toggle
@@ -375,7 +383,7 @@
               href="https://app.acuityscheduling.com/schedule.php?owner=12694574"
               target="_blank"
               rel="noopener"
-              class="flex items-center justify-center rounded-full bg-ink px-6 py-3.5 text-base font-medium text-inverse-ink shadow-e2-dark press active:shadow-press"
+              class="btn-cta flex items-center justify-center rounded-full px-6 py-3.5 text-base font-medium shadow-e2-dark press active:shadow-press"
               data-menu-link
               >Book a session</a
             >
@@ -391,54 +399,71 @@
     </div>
 
     <main id="main">
-      <!-- ================= HERO ================= -->
-      <section id="top" class="grain relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
-        <!-- Soft organic background wash -->
-        <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+      <!--
+        ================= HERO =================
+
+        The hero and the credential strip below it are one dark band: a beach
+        photograph under a deep teal scrim, cream type over both. They are two
+        sections so the strip can stay a <dl>, but they share a ground and read
+        as a single unit, so treat them as one thing when changing either.
+
+        The section's own background is `band`, which is what shows while the
+        photograph loads, if it is missing, and under `prefers-contrast: more`.
+        Every contrast figure in src/input.css is measured against it, so that
+        state is the readable one rather than a fallback nobody looked at.
+      -->
+      <section id="top" class="hero-bg relative overflow-hidden bg-band">
+        <div class="pointer-events-none absolute inset-0" aria-hidden="true">
           <!--
-            PHOTO SLOT. Generated by scripts/hero-texture.py; replace the file
-            with any photograph and it will be desaturated, faded and masked to
-            match. Opacity lives on --hero-photo in src/input.css. The blobs
-            below deliberately paint on top of it.
+            HERO BACKGROUND SLOT.
+
+            Drop any image into assets/img/ named hero-bg.<ext> (jpg, jpeg, png,
+            webp or avif) and the build points this tag and its preload at it.
+            Nothing to edit here. Delete the file and both tags remove themselves.
+
+            Full-bleed and above the fold, so it loads at high priority -- this is
+            the largest paint on the page.
           -->
           <!-- hero-bg:start -->
-          <img
-            src="/assets/img/hero-bg.webp"
-            alt=""
-            width="1600"
-            height="900"
-            decoding="async"
-            fetchpriority="low"
-            class="hero-photo"
-            onerror="this.remove();"
-          />
+          <img src="/assets/img/hero-bg.webp" alt="" decoding="async" fetchpriority="high" class="hero-photo" onerror="this.remove();" />
           <!-- hero-bg:end -->
-          <div class="absolute -top-40 -right-32 size-[38rem] rounded-full bg-sunk blur-3xl opacity-70"></div>
-          <div class="absolute top-40 -left-40 size-[30rem] rounded-full bg-line/60 blur-3xl"></div>
+          <div class="hero-scrim"></div>
         </div>
 
-        <div class="container-page">
-          <div class="grid items-center gap-14 lg:grid-cols-12 lg:gap-16">
-            <div class="lg:col-span-7">
-              <p class="eyebrow reveal">Rolfing<sup class="text-[0.65em]">®</sup> Structural Integration &middot; Wilmington, NC</p>
+        <!-- Padding is the drawn 78/84 plus the 80px the fixed header occupies. -->
+        <div class="relative container-page pt-[8.5rem] pb-16 md:pt-[9.5rem] md:pb-20 lg:pt-[9.875rem] lg:pb-[5.25rem]">
+          <div class="grid items-end gap-12 lg:grid-cols-[1fr_300px] lg:gap-12">
+            <div>
+              <!-- Not the `eyebrow` utility: that one hardcodes `text-muted`, which
+                   is a grey for light grounds and disappears against the scrim. -->
+              <p class="reveal text-[10px] font-medium tracking-[0.18em] text-band-ink-warm/[0.72] uppercase">
+                Rolfing<sup class="text-[0.65em]">®</sup> Structural Integration &middot;
+                <!-- Held together so a narrow screen breaks at the separator rather
+                     than orphaning "NC" on its own line. -->
+                <span class="whitespace-nowrap">Wilmington, NC</span>
+              </p>
 
               <h1
-                class="reveal mt-5 font-display text-[clamp(2.75rem,7vw,4.75rem)] leading-[1.02] font-normal tracking-[-0.02em] text-balance text-ink"
+                class="reveal mt-[26px] font-display text-[2.5rem] leading-[1.02] font-normal tracking-[-0.02em] text-balance text-band-ink md:text-[3.5rem] lg:text-[4.625rem]"
               >
-                Move. Connect.
-                <span class="italic text-accent">Integrate.</span>
+                Move. Connect.<br class="hidden lg:inline" />
+                <!-- A span rather than <em>: the italic here is styling, not emphasis,
+                     and <em> would have a screen reader stress the word. -->
+                <span class="italic text-band-accent">Integrate.</span>
               </h1>
 
-              <p class="reveal mt-7 max-w-xl text-lg leading-relaxed text-muted text-pretty sm:text-xl">
+              <p class="reveal mt-[26px] max-w-[440px] text-[15px] leading-[1.62] text-band-ink/[0.82] text-pretty sm:text-[15.5px]">
                 Chronic pain and stiffness are rarely just where you feel them. Rolfing works with the connective tissue that holds you together, so the bracing underneath has a chance to let go.
               </p>
 
-              <div class="reveal mt-10 flex flex-wrap items-center gap-3">
+              <!-- Full-width and stacked on the narrowest screens, side by side from
+                   there. `flex-wrap` alone would leave a half-width orphan. -->
+              <div class="reveal mt-[34px] flex flex-col items-stretch gap-3 min-[420px]:flex-row min-[420px]:flex-wrap min-[420px]:items-center">
                 <a
                   href="https://app.acuityscheduling.com/schedule.php?owner=12694574"
                   target="_blank"
                   rel="noopener"
-                  class="group inline-flex items-center gap-2 rounded-full bg-ink px-7 py-4 text-base font-medium text-inverse-ink shadow-e3-dark press hover:bg-accent hover:shadow-e4-dark active:shadow-press"
+                  class="btn-cta group inline-flex items-center justify-center gap-2 rounded-full px-[26px] py-[15px] text-[13.5px] font-medium shadow-e3-dark press hover:shadow-e4-dark active:shadow-press"
                 >
                   Book a session
                   <svg viewBox="0 0 24 24" class="size-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -447,64 +472,66 @@
                 </a>
                 <a
                   href="#rolfing"
-                  class="inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-7 py-4 text-base font-medium text-ink shadow-e1 press hover:bg-sunk hover:shadow-e2 active:shadow-press"
+                  class="inline-flex items-center justify-center gap-2 rounded-full border border-band-ink/40 px-[26px] py-[15px] text-[13.5px] font-medium text-band-ink press transition-colors hover:border-band-ink/70 active:shadow-press"
                 >
                   What is Rolfing?
                 </a>
               </div>
 
-              <p class="reveal mt-8 text-sm text-muted">
+              <p class="reveal mt-[22px] text-xs leading-[1.5] text-band-ink/60">
                 Not sure if it's right for you?
-                <a href="tel:+19107074793" class="font-medium text-ink underline decoration-line decoration-2 underline-offset-4 transition-colors hover:decoration-accent"
+                <a href="tel:+19107074793" class="text-band-ink underline decoration-band-ink/50 underline-offset-4 transition-colors hover:decoration-band-accent"
                   >Call (910) 707-4793</a
                 >
-                Beth is happy to talk it through first.
+                &mdash; Beth is happy to talk it through first.
               </p>
             </div>
 
-            <!-- Portrait -->
-            <div class="reveal lg:col-span-5">
-              <figure class="relative mx-auto max-w-md">
-                <div class="overflow-hidden rounded-[2rem] bg-sunk shadow-e3">
+            <!-- Portrait and credential card.
+                 Below the copy in a row until lg, where they take the right rail
+                 as a column. `items-end` on the grid lands the card's bottom edge
+                 level with the fine print. -->
+            <div class="reveal">
+              <figure class="flex flex-row items-center gap-6 sm:gap-8 lg:flex-col lg:items-start lg:gap-[18px]">
+                <div class="size-[132px] shrink-0 overflow-hidden rounded-full border-[3px] border-band-ink/85 bg-band">
                   <!--
-                    PHOTO SLOT. Drop a square headshot at assets/img/beth-portrait.jpg (about
-                    1200x1200). Square because the photo we have is a tight square crop; a taller
-                    frame would cut the sides off. Until the file exists the placeholder shows.
+                    PHOTO SLOT. Drop a square headshot at assets/img/beth.webp (about
+                    1200x1200). Square because the frame is a circle and anything
+                    taller loses the sides. Until the file exists the placeholder shows.
+
+                    The photograph is black and white and stays that way: the one
+                    grey thing in a teal frame is what makes it read as a person
+                    rather than another part of the scenery.
                   -->
                   <!-- portrait:start -->
                   <img
                     src="/assets/img/beth.webp"
                     alt="Beth Burgin, Certified Advanced Rolfer"
-                    fetchpriority="high"
                     decoding="async"
                     width="904"
                     height="876"
-                    class="aspect-square w-full object-cover object-top"
+                    class="size-full object-cover object-top"
                     onerror="this.remove(); document.getElementById('portrait-fallback').hidden = false;"
                   />
                   <!-- portrait:end -->
                   <div
                     id="portrait-fallback"
                     hidden
-                    class="flex aspect-square w-full flex-col items-center justify-center gap-4 bg-gradient-to-br from-sunk via-line to-inverse/20 p-8 text-center"
+                    class="flex size-full items-center justify-center bg-band"
                   >
-                    <svg viewBox="0 0 24 24" class="size-12 text-muted" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" class="size-12 text-band-ink/70" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" aria-hidden="true">
                       <path d="M12 2v20" />
                       <path d="M7 6c3.3 1.6 6.7 1.6 10 0" />
                       <path d="M7 12c3.3 1.6 6.7 1.6 10 0" />
                       <path d="M7 18c3.3 1.6 6.7 1.6 10 0" />
                     </svg>
-                    <p class="font-display text-xl text-ink">Beth Burgin</p>
-                    <p class="text-sm text-muted">Certified Advanced Rolfer<sup>®</sup></p>
+                    <span class="sr-only">Beth Burgin, Certified Advanced Rolfer&reg;</span>
                   </div>
                 </div>
 
-                <!-- Floating credential card -->
-                <figcaption
-                  class="absolute -bottom-6 -left-4 max-w-[15rem] rounded-2xl border border-line bg-surface p-5 shadow-e4 sm:-left-8"
-                >
-                  <p class="font-display text-3xl leading-none text-ink">25<span class="text-accent">+</span></p>
-                  <p class="mt-2 text-sm leading-snug text-muted">
+                <figcaption class="hero-card max-w-[15rem] rounded-2xl border border-band-ink/[0.28] px-[22px] pt-[18px] pb-5">
+                  <p class="font-display text-[34px] leading-none text-band-ink">25<span class="text-band-accent">+</span></p>
+                  <p class="mt-2 text-[12.5px] leading-[1.42] text-band-ink/[0.78]">
                     years in practice, with advanced training in Munich
                   </p>
                 </figcaption>
@@ -514,25 +541,30 @@
         </div>
       </section>
 
-      <!-- ================= CREDENTIAL STRIP ================= -->
-      <section aria-label="Credentials" class="border-y border-line bg-sunk">
+      <!--
+        ================= CREDENTIAL STRIP =================
+        Same ground as the hero, no border between them, so the colour reads as
+        one band rather than two stacked panels. Cells are left-aligned and the
+        first one's text lines up with the headline above it.
+      -->
+      <section aria-label="Credentials" class="bg-band">
         <div class="container-page">
-          <dl class="grid grid-cols-2 divide-line sm:grid-cols-4 sm:divide-x">
-            <div class="px-2 py-7 text-center sm:px-4">
-              <dt class="text-xs font-semibold tracking-[0.14em] text-muted uppercase">Certified</dt>
-              <dd class="mt-2 font-display text-lg text-ink">Advanced Rolfer<sup class="text-[0.6em]">®</sup></dd>
+          <dl class="grid grid-cols-2 sm:grid-cols-4">
+            <div class="py-[22px] pr-7">
+              <dt class="text-[8.5px] font-medium tracking-[0.16em] text-band-ink/[0.58] uppercase">Certified</dt>
+              <dd class="mt-[9px] font-display text-[15px] text-band-ink">Advanced Rolfer<sup class="text-[0.6em]">®</sup></dd>
             </div>
-            <div class="border-l border-line px-2 py-7 text-center sm:border-l-0 sm:px-4">
-              <dt class="text-xs font-semibold tracking-[0.14em] text-muted uppercase">Licensed</dt>
-              <dd class="mt-2 font-display text-lg text-ink">NC LMBT #1532</dd>
+            <div class="border-l border-band-ink/[0.14] py-[22px] pr-7 pl-7">
+              <dt class="text-[8.5px] font-medium tracking-[0.16em] text-band-ink/[0.58] uppercase">Licensed</dt>
+              <dd class="mt-[9px] font-display text-[15px] text-band-ink">NC LMBT #1532</dd>
             </div>
-            <div class="border-t border-line px-2 py-7 text-center sm:border-t-0 sm:px-4">
-              <dt class="text-xs font-semibold tracking-[0.14em] text-muted uppercase">Member since</dt>
-              <dd class="mt-2 font-display text-lg text-ink">Dr. Ida Rolf Institute, 2000</dd>
+            <div class="border-t border-band-ink/[0.14] py-[22px] pr-7 sm:border-t-0 sm:border-l sm:pl-7">
+              <dt class="text-[8.5px] font-medium tracking-[0.16em] text-band-ink/[0.58] uppercase">Member since</dt>
+              <dd class="mt-[9px] font-display text-[15px] text-band-ink">Dr. Ida Rolf Institute, 2000</dd>
             </div>
-            <div class="border-t border-l border-line px-2 py-7 text-center sm:border-t-0 sm:px-4">
-              <dt class="text-xs font-semibold tracking-[0.14em] text-muted uppercase">Located in</dt>
-              <dd class="mt-2 font-display text-lg text-ink">Downtown Wilmington</dd>
+            <div class="border-t border-l border-band-ink/[0.14] py-[22px] pr-7 pl-7 sm:border-t-0">
+              <dt class="text-[8.5px] font-medium tracking-[0.16em] text-band-ink/[0.58] uppercase">Located in</dt>
+              <dd class="mt-[9px] font-display text-[15px] text-band-ink">Downtown Wilmington</dd>
             </div>
           </dl>
         </div>

@@ -41,10 +41,38 @@ const hasPortrait = !!src && existsSync(join(root, src[1].replace(/^\//, "")));
 
 if (block && !hasPortrait) {
   html = html.replace(block[0], "").replace(/(id="portrait-fallback")\s+hidden/, "$1");
-  await writeFile(page, html);
 }
 
+// The hero background is a drop-in slot: put any image at assets/img/hero-bg.*
+// and it gets used, with no edit to the markup. Whichever extension is present
+// wins, in the order below, so a .jpg dropped next to an old .webp takes over.
+// With no file at all the tags come out entirely rather than 404ing.
+//
+// Two blocks reference the file -- the <img> in the hero and the <link rel=preload>
+// in the head -- and they are rewritten together. A preload pointing at a different
+// extension than the <img> is worse than no preload: it downloads a second copy of
+// the photograph and still doesn't warm the one the page uses.
+const heroExt = ["avif", "webp", "jpg", "jpeg", "png"].find((ext) =>
+  existsSync(join(root, "assets", "img", `hero-bg.${ext}`))
+);
+
+for (const marker of ["hero-bg", "hero-preload"]) {
+  const re = new RegExp(`[ \\t]*<!-- ${marker}:start -->[\\s\\S]*?<!-- ${marker}:end -->\\n`);
+  const block = html.match(re);
+  if (!block) continue;
+
+  html = heroExt
+    ? html.replace(
+        block[0],
+        block[0].replace(/\/assets\/img\/hero-bg\.\w+/g, `/assets/img/hero-bg.${heroExt}`)
+      )
+    : html.replace(block[0], "");
+}
+
+await writeFile(page, html);
+
 console.log(
-  `Built dist/ (${entries.filter((e) => existsSync(join(root, e))).join(", ")})` +
-    (hasPortrait ? ` with hero photo ${src[1]}` : " without a hero photo, showing the placeholder")
+  `Built dist/ (${entries.filter((e) => existsSync(join(root, e))).join(", ")})\n` +
+    `  portrait:       ${hasPortrait ? src[1] : "missing, showing the placeholder"}\n` +
+    `  hero background: ${heroExt ? `assets/img/hero-bg.${heroExt}` : "none, slot left empty"}`
 );

@@ -53,6 +53,48 @@
   --color-sea: #2c9aa6;
   --color-sea-wash: #e7f1f2;
 
+  /* ------------------------------------------------------------------ *
+   * The band
+   *
+   * The hero and the credential strip beneath it are one dark unit: a beach
+   * photograph under a deep teal scrim, cream type over it. These are the only
+   * colours in the file scoped to one band of the page rather than to a role
+   * that recurs site-wide, which is why they are named for the band.
+   *
+   * They are deliberately NOT the `inverse` group. `inverse` dresses the footer
+   * and the dark panels further down, which are near-neutral by design; pulling
+   * those toward this teal would spread the hero's colour over the whole page,
+   * which is the opposite of what it is for.
+   *
+   * Every pair below is measured against `band` at full strength -- the worst
+   * case, since that is what shows when the photograph is missing or when
+   * `prefers-contrast: more` removes it:
+   *
+   *   band-ink on band            13.5:1
+   *   band-ink at .82 (body)       9.5:1
+   *   band-ink at .72 (eyebrow)    7.4:1
+   *   band-ink at .60 (fine print) 5.7:1
+   *   band-accent on band          9.0:1
+   *
+   * .5 is the lowest the strip labels were drawn at and it lands on 4.45:1, a
+   * rounding error under AA, so they are set at .58 (5.4:1) instead. Anything
+   * this group carries stays at or above .58.
+   * ------------------------------------------------------------------ */
+  --color-band: #092a2f;
+  --color-band-ink: #f6f1e6;
+  --color-band-ink-warm: #f4eee2;
+  --color-band-accent: #8fd3cf;
+
+  /* The primary call to action, and the one colour on the site that exists only
+     to be a button. Separate from `accent` on purpose: `accent` also has to work
+     as text in the light sections, and terracotta does not -- it reads 4.25:1 on
+     canvas, under AA.
+     Drawn as #c1583c, which puts white at 4.44:1 -- 1% under AA on a 13.5px
+     label. Four points of red off it clears 4.64:1 and is not a visible change.
+     Hover is the drawn value and clears 5.8:1. */
+  --color-cta: #bd5539;
+  --color-cta-soft: #a8482f;
+
   /* Previous scheme, one paste away if the colour is too much. White, grey,
      black:
        canvas #fafafa  surface #ffffff  sunk #f2f2f4
@@ -224,6 +266,149 @@
 
 /* Reveal-on-scroll: opt-in, and inert when JS is off or motion is reduced */
 @layer components {
+  /* ---------------------------------------------------------------- *
+   * Header
+   *
+   * The header has two looks, because it crosses a hard colour edge. At the top
+   * of the page it lies over the dark hero and has to be cream and transparent;
+   * a few pixels down it is over light sections and has to be ink on white. It
+   * is `fixed`, so both states belong to the same element.
+   *
+   * site.js adds `.is-scrolled` past 16px and does nothing else. Every colour
+   * lives here rather than in a list of Tailwind classes in the JS, because two
+   * states x six elements is twelve class swaps to keep in sync by hand, and the
+   * markup would carry whichever state happened to be written as the default.
+   *
+   * Which means: the dark state is the DEFAULT below, and the markup carries no
+   * colour utilities on these elements at all. A no-JS visitor keeps the cream
+   * header over the hero -- correct where they are, and the only place the page
+   * loads. Scrolling without JS leaves cream type over light sections, which is
+   * the one thing this trade gives up; the alternative is a white bar over the
+   * photograph on first paint, which everyone sees rather than almost no one.
+   * ---------------------------------------------------------------- */
+  .site-header {
+    transition:
+      background-color 300ms var(--ease-lift),
+      box-shadow 300ms var(--ease-lift),
+      backdrop-filter 300ms var(--ease-lift);
+  }
+
+  .site-header.is-scrolled {
+    /* 95% rather than something more see-through: the nav is text-muted, and
+       when a dark section slides under a thinner background the effective
+       contrast drops under 4.5:1. */
+    background-color: color-mix(in srgb, var(--color-surface) 95%, transparent);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-header);
+  }
+
+  /* The logo mark: cream disc with a teal glyph over the hero, inverted below. */
+  .header-mark {
+    background-color: var(--color-band-ink-warm);
+    color: var(--color-band);
+    transition:
+      background-color 300ms var(--ease-lift),
+      color 300ms var(--ease-lift);
+  }
+
+  .site-header.is-scrolled .header-mark {
+    background-color: var(--color-inverse);
+    color: var(--color-inverse-ink);
+  }
+
+  .site-header a:hover .header-mark {
+    background-color: var(--color-band-accent);
+    color: var(--color-band);
+  }
+
+  .site-header.is-scrolled a:hover .header-mark {
+    background-color: var(--color-accent);
+    color: var(--color-inverse-ink);
+  }
+
+  .header-name {
+    color: var(--color-band-ink-warm);
+    transition: color 300ms var(--ease-lift);
+  }
+
+  .site-header.is-scrolled .header-name {
+    color: var(--color-ink);
+  }
+
+  /* .6 on the drawn value; measured at 5.7:1 on `band`. */
+  .header-kicker {
+    color: color-mix(in srgb, var(--color-band-ink-warm) 60%, transparent);
+    transition: color 300ms var(--ease-lift);
+  }
+
+  .site-header.is-scrolled .header-kicker {
+    color: var(--color-muted);
+  }
+
+  .header-link {
+    color: color-mix(in srgb, var(--color-band-ink-warm) 82%, transparent);
+    transition: color 150ms var(--ease-lift);
+  }
+
+  .header-link:hover,
+  .header-link[aria-current="true"] {
+    color: var(--color-band-ink);
+  }
+
+  .site-header.is-scrolled .header-link {
+    color: var(--color-muted);
+  }
+
+  .site-header.is-scrolled .header-link:hover,
+  .site-header.is-scrolled .header-link[aria-current="true"] {
+    color: var(--color-ink);
+  }
+
+  /* The menu button is a 44px target on a photograph, so it keeps a hairline to
+     stay findable. .4 cream is 3.4:1 on `band` -- over the 3:1 that a control
+     boundary needs. */
+  .header-menu-btn {
+    border-color: color-mix(in srgb, var(--color-band-ink) 40%, transparent);
+    background-color: color-mix(in srgb, var(--color-band) 30%, transparent);
+    color: var(--color-band-ink);
+    transition:
+      background-color 150ms var(--ease-lift),
+      border-color 150ms var(--ease-lift),
+      color 150ms var(--ease-lift);
+  }
+
+  .header-menu-btn:hover {
+    border-color: color-mix(in srgb, var(--color-band-ink) 70%, transparent);
+    background-color: color-mix(in srgb, var(--color-band) 55%, transparent);
+  }
+
+  .site-header.is-scrolled .header-menu-btn {
+    border-color: var(--color-line);
+    background-color: color-mix(in srgb, var(--color-surface) 70%, transparent);
+    color: var(--color-ink);
+  }
+
+  .site-header.is-scrolled .header-menu-btn:hover {
+    border-color: var(--color-line);
+    background-color: var(--color-sunk);
+  }
+
+  /* ---------------------------------------------------------------- *
+   * The terracotta call to action
+   *
+   * Same colour in both header states and in the hero, on purpose. Everything
+   * else in the header crosses the colour edge; if the button did too it would
+   * change colour under a cursor that never moved, and it is the one element on
+   * the page whose job is to stay put and be recognised.
+   * ---------------------------------------------------------------- */
+  .btn-cta {
+    background-color: var(--color-cta);
+    color: #fff;
+  }
+
+  .btn-cta:hover {
+    background-color: var(--color-cta-soft);
+  }
   /* The offset uses the independent `translate` property, and the card hover
      below uses `transform`. Splitting them matters because an element can be
      both a reveal target and a card that lifts, and a `transition` shorthand
@@ -443,64 +628,97 @@
 
   /* Hero background photograph.
      ------------------------------------------------------------------
-     Sits underneath the wash blobs, desaturated and faint, so it reads as
-     tone and texture rather than as a subject — the hero already has a
-     portrait in it, and a second recognisable subject behind the headline
-     fights with the first. Swap assets/img/hero-bg.webp for any image; the
-     rules below are size-agnostic, and the tag removes itself if the file
-     is missing.
+     Drop a file at assets/img/hero-bg.<ext> and it fills the hero. Nothing here
+     cares about its size or aspect; the build points the tag at whichever
+     extension it finds, and removes the tag if there is no file at all.
 
-     The ceiling on --hero-photo is set by the grey body copy, not the headline.
-     Near-black ink holds up over almost anything, but --color-muted needs the
-     paper behind it to stay lighter than about #e0e0e0 to clear 4.5:1, and this
-     file's darks go well past that. So the image cannot simply be faded down
-     until it is safe — at a low enough opacity for that it is invisible. It has
-     to be genuinely absent where text lands, which is what the mask does: the
-     left 58% stays fully clear and the image lives in the empty column beside
-     the portrait. Measured worst-case ratios are in the commit message. */
+     The section's own ground is `band`, so a missing or still-loading photo
+     leaves flat deep teal rather than a hole -- which is also the case every
+     contrast figure in @theme is measured against.
+
+       --hero-scrim   scrim strength, 0 to 1. 1 is the drawn value; lower it and
+                      the water comes up while the headline's contrast goes down.
+                      Both move together, which is the whole tension in this hero.
+
+     Do not reach for this knob to fix a photograph. A crop bright enough to eat
+     the headline wants a different crop, or the first two stops moved -- see the
+     note on the gradient below. */
+  .hero-bg {
+    --hero-scrim: 1;
+  }
+
   .hero-photo {
-    --hero-photo: 0.55;
-
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 30%;
-    /* Held back rather than drained. The file is tinted at generation time, so
-       there is no grey to hue-rotate, and a real photograph dropped in here
-       keeps its own colour at slightly less than full strength. */
-    filter: saturate(0.9);
-    opacity: var(--hero-photo);
-
-    /* Three masks intersected: fade out at the bottom so the section hands off
-       cleanly to the strip below, clear the whole text column on the left, and
-       pull in the corners so it reads as light falling rather than as a panel
-       with edges. Where mask-composite is unsupported the masks union instead —
-       so the fallback is a visible rectangle, not unreadable text. */
-    mask-image:
-      linear-gradient(to bottom, transparent 0%, #000 14%, #000 62%, transparent 96%),
-      linear-gradient(to right, transparent 0%, transparent 58%, #000 86%),
-      radial-gradient(115% 90% at 80% 42%, #000 30%, transparent 80%);
-    -webkit-mask-composite: source-in;
-    mask-composite: intersect;
+    /* 55% down rather than centred: the horizon sits high in the frame and the
+       meditating figure sits low, and this keeps both. */
+    object-position: 50% 55%;
   }
 
-  /* Below lg the hero is a single column: the copy runs the full width, the
-     portrait sits under it, and there is no empty side left to put a picture
-     in. Anything visible here lands behind grey text. Off, rather than present
-     and failing contrast. Raise --hero-photo here if you want it anyway. */
-  @media (width < 64rem) {
+  /* The scrim. Angled at 96deg rather than straight across so the dark side
+     leans slightly into the top-left, where the headline starts.
+
+     Two of these four stops are load-bearing. 0% and 34% cover the copy column,
+     and they are what put the headline at 13.5:1 and the body at 9.5:1; 66% and
+     100% only shape how much water survives on the right. If a different crop
+     of the photograph comes in, re-measure the headline and adjust the FIRST TWO
+     STOPS. Lifting the back two to compensate darkens the water for no gain. */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      96deg,
+      color-mix(in srgb, var(--color-band) calc(var(--hero-scrim) * 92%), transparent) 0%,
+      color-mix(in srgb, var(--color-band) calc(var(--hero-scrim) * 72%), transparent) 34%,
+      color-mix(in srgb, var(--color-band) calc(var(--hero-scrim) * 18%), transparent) 66%,
+      color-mix(in srgb, var(--color-band) calc(var(--hero-scrim) * 32%), transparent) 100%
+    );
+  }
+
+  /* On a phone the copy runs the full width, so there is no dark side to lean
+     into -- an angled scrim would leave the last lines of the paragraph sitting
+     on open water. Straight down instead, and heavier, because a portrait crop
+     of a landscape photograph shows much more sky. */
+  @media (width < 48rem) {
+    .hero-scrim {
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-band) calc(var(--hero-scrim) * 90%), transparent) 0%,
+        color-mix(in srgb, var(--color-band) calc(var(--hero-scrim) * 72%), transparent) 100%
+      );
+    }
+
+    /* Further right, to hold the figure in frame once the sides are cropped. */
     .hero-photo {
-      --hero-photo: 0;
+      object-position: 60% 55%;
     }
   }
 
-  /* Anyone who has asked the OS for more contrast does not want a photo
-     behind the copy. */
+  /* The frosted credential card.
+     Sits in the right rail where the scrim is thinnest, so its own ground is
+     doing the contrast work on its caption almost unaided. Kept as a knob
+     because the right answer depends on how bright the photograph is behind it,
+     and the blur means what matters is the local average rather than any one
+     pixel. Measured against the shipped crop; re-check it if the photo changes. */
+  .hero-card {
+    background: color-mix(in srgb, var(--color-band) 42%, transparent);
+    backdrop-filter: blur(6px);
+  }
+
+  /* Anyone who has asked the OS for more contrast does not want a photograph
+     under the headline. Removing it leaves the flat `band` ground, which every
+     figure in @theme is already measured against, so nothing else has to move. */
   @media (prefers-contrast: more) {
     .hero-photo {
       display: none;
+    }
+
+    .hero-card {
+      background: var(--color-band);
+      backdrop-filter: none;
     }
   }
 }

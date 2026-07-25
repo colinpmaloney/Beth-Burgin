@@ -76,9 +76,10 @@ update both places together.
 ### Photos
 
 Drop files into `assets/img/` using the names listed in
-[`assets/img/README.md`](assets/img/README.md). The hero portrait falls back to
-a styled placeholder when `beth-portrait.jpg` isn't there, so nothing looks
-broken while you wait on photography.
+[`assets/img/README.md`](assets/img/README.md). Both hero photos are slots: the
+portrait falls back to a placeholder when `beth.webp` isn't there, and the
+full-bleed hero background falls back to flat teal when `hero-bg.*` isn't, so
+nothing looks broken while you wait on photography.
 
 ## Fonts
 

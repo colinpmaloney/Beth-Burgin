@@ -146,21 +146,20 @@
   })();
 
   /* ------------------------------------------------------------------ *
-   * 2. Header background on scroll
+   * 2. Header state on scroll
+   *
+   * One class, and every colour it implies lives in src/input.css under
+   * `.site-header`. The header spans a hard colour edge -- cream and transparent
+   * over the dark hero, ink on white below it -- so this is a state flag, not a
+   * list of styles: twelve class swaps done from here is twelve chances for the
+   * two states to drift apart.
    * ------------------------------------------------------------------ */
   (function stickyHeader() {
     const header = document.querySelector("[data-header]");
     if (!header) return;
 
-    // 95% rather than something more see-through: the nav is text-muted, and
-    // when a dark section slides under a thinner background the effective
-    // contrast drops under 4.5:1.
-    const scrolledClasses = ["bg-surface/95", "backdrop-blur-md", "shadow-header"];
-
     function update() {
-      header.classList.toggle(scrolledClasses[0], window.scrollY > 16);
-      header.classList.toggle(scrolledClasses[1], window.scrollY > 16);
-      header.classList.toggle(scrolledClasses[2], window.scrollY > 16);
+      header.classList.toggle("is-scrolled", window.scrollY > 16);
     }
 
     update();
