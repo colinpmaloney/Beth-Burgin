@@ -721,4 +721,45 @@
       backdrop-filter: none;
     }
   }
+
+  /* ---------------------------------------------------------------- *
+   * One-screen hero (desktop)
+   *
+   * Holds the hero and the credential strip together in a single viewport: the
+   * strip sits at the bottom, fully in view, and the hero above it flexes to
+   * fill the rest and centres its copy. The strip is the reason the height is
+   * on this wrapper rather than on the hero section alone.
+   *
+   * Gated on HEIGHT as well as width. The copy, the strip, and the 80px the
+   * fixed header occupies only clear the fold on a tall enough screen; under
+   * that the rule simply does not apply -- the hero keeps the content-driven
+   * padding from the markup, and a short laptop scrolls the strip into view
+   * rather than clipping the copy. The 56rem cap stops the band stretching into
+   * empty water on tall monitors; `min-height`, not `height`, so an unusually
+   * tall block grows the screen rather than being cut.
+   * ---------------------------------------------------------------- */
+  @media (width >= 64rem) and (height >= 50rem) {
+    .hero-screen {
+      display: flex;
+      flex-direction: column;
+      min-height: min(100svh, 56rem);
+    }
+
+    .hero-screen .hero-fill {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Header clearance up top so centred copy never slides under the fixed bar,
+       a little air before the strip below. Outranks the lg padding in the markup
+       on specificity, so it wins whenever this query is live. The 50rem height
+       gate above is set so copy + strip + header clear the fold even at the
+       narrowest desktop width, where the copy column is at its tallest. */
+    .hero-screen .hero-fill-inner {
+      padding-top: 5rem;
+      padding-bottom: 1.5rem;
+    }
+  }
 }

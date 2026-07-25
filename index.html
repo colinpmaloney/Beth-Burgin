@@ -412,7 +412,16 @@
         Every contrast figure in src/input.css is measured against it, so that
         state is the readable one rather than a fallback nobody looked at.
       -->
-      <section id="top" class="hero-bg relative overflow-hidden bg-band">
+      <!--
+        `.hero-screen` (see src/input.css) holds the hero and the credential strip
+        together in one screen on desktop: the strip sits at the bottom, fully in
+        view, and the hero above it flexes to fill the rest and centres its copy.
+        It is gated on viewport HEIGHT as well as width -- only screens tall enough
+        to hold copy + strip below the fixed header get the one-screen treatment;
+        a short laptop keeps the natural content-driven height and never clips.
+      -->
+      <div class="hero-screen">
+      <section id="top" class="hero-fill hero-bg relative overflow-hidden bg-band">
         <div class="pointer-events-none absolute inset-0" aria-hidden="true">
           <!--
             HERO BACKGROUND SLOT.
@@ -430,8 +439,11 @@
           <div class="hero-scrim"></div>
         </div>
 
-        <!-- Padding is the drawn 78/84 plus the 80px the fixed header occupies. -->
-        <div class="relative container-page pt-[8.5rem] pb-16 md:pt-[9.5rem] md:pb-20 lg:pt-[9.875rem] lg:pb-[5.25rem]">
+        <!-- This padding sets the hero height everywhere EXCEPT the one-screen
+             desktop case (the drawn 78/84 plus the 80px the fixed header takes).
+             When `.hero-screen` is active, src/input.css overrides it -- the
+             screen owns the height and this block is centred within it. -->
+        <div class="hero-fill-inner relative container-page pt-[8.5rem] pb-16 md:pt-[9.5rem] md:pb-20 lg:pt-[9.875rem] lg:pb-[5.25rem]">
           <div class="grid items-end gap-12 lg:grid-cols-[1fr_300px] lg:gap-12">
             <div>
               <!-- Not the `eyebrow` utility: that one hardcodes `text-muted`, which
@@ -491,9 +503,16 @@
                  Below the copy in a row until lg, where they take the right rail
                  as a column. `items-end` on the grid lands the card's bottom edge
                  level with the fine print. -->
-            <div class="reveal">
+            <!-- No `reveal` on this wrapper. An ancestor animating opacity < 1
+                 isolates the subtree into its own compositing group, and the
+                 frosted card's backdrop-filter then has nothing behind it to
+                 blur until the fade finishes -- the card reads sharp for the
+                 length of the entrance, then snaps to frosted. The reveal moves
+                 onto the two leaves below instead: the card fading via its OWN
+                 opacity keeps the blur live the whole way in. -->
+            <div>
               <figure class="flex flex-row items-center gap-6 sm:gap-8 lg:flex-col lg:items-start lg:gap-[18px]">
-                <div class="size-[132px] shrink-0 overflow-hidden rounded-full border-[3px] border-band-ink/85 bg-band">
+                <div class="reveal size-[132px] shrink-0 overflow-hidden rounded-full border-[3px] border-band-ink/85 bg-band">
                   <!--
                     PHOTO SLOT. Drop a square headshot at assets/img/beth.webp (about
                     1200x1200). Square because the frame is a circle and anything
@@ -529,7 +548,7 @@
                   </div>
                 </div>
 
-                <figcaption class="hero-card max-w-[15rem] rounded-2xl border border-band-ink/[0.28] px-[22px] pt-[18px] pb-5">
+                <figcaption class="hero-card reveal max-w-[15rem] rounded-2xl border border-band-ink/[0.28] px-[22px] pt-[18px] pb-5">
                   <p class="font-display text-[34px] leading-none text-band-ink">25<span class="text-band-accent">+</span></p>
                   <p class="mt-2 text-[12.5px] leading-[1.42] text-band-ink/[0.78]">
                     years in practice, with advanced training in Munich
@@ -569,6 +588,8 @@
           </dl>
         </div>
       </section>
+      </div>
+      <!-- /.hero-screen -->
 
       <!-- ================= WHAT IS ROLFING ================= -->
       <section id="rolfing" class="py-24 sm:py-32">
